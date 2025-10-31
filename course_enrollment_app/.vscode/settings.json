@@ -1,0 +1,7 @@
+{
+  // Configure the "Android iOS Emulator" extension to use the Android SDK emulator
+  // Adjust the path below if your SDK is in a different location.
+  "emulator.emulatorPathWindows": "C:\\AndroidSDK\\emulator\\emulator.exe",
+  // If you want the extension to offer a default AVD to cold-boot, set the name here.
+  "emulator.defaultAvd": "Medium_Phone_API_36.0"
+}
