@@ -1,0 +1,1 @@
+John,Doe,2023001,HASHED_PASSWORD_PLACEHOLDER,Computer Science,1,student
