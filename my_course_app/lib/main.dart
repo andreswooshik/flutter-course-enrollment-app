@@ -1,13 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
-// Data & Domain imports
 import 'authenticator.dart';
 import 'data/auth_repository_impl.dart';
 import 'domain/repositories/auth_repository.dart';
 import 'domain/usecases/login_usecase.dart';
-
-// Presentation imports
 import 'presentation/viewmodels/login_viewmodel.dart';
 import 'presentation/screens/login_screen.dart';
 import 'presentation/screens/home_screen.dart';
