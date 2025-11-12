@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import '../../authenticator.dart';
 import '../../services/user_storage_service.dart';
 import '../../core/constants/app_colors.dart';
@@ -143,31 +143,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
     });
 
     try {
-      // Check if account ID already exists
-      final accountExists = await _userStorage.userExists(_accountIDController.text.trim());
-      
-      if (accountExists) {
-        if (mounted) {
-          setState(() {
-            _isLoading = false;
-          });
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Account ID already exists! Please use a different ID.'),
-              backgroundColor: Colors.orange,
-              duration: Duration(seconds: 3),
-            ),
-          );
-        }
-        return;
-      }
-
       // Hash password with BCrypt (runs in background)
       final passwordHash = await Future.microtask(() => 
         _authenticator.hashPassword(_passwordController.text)
       );
       
-      // Save user to persistent storage
+      // Save user to persistent storage (this also checks for duplicates)
       final success = await _userStorage.saveUser(
         firstName: _firstNameController.text.trim(),
         lastName: _lastNameController.text.trim(),
@@ -180,71 +161,80 @@ class _RegisterScreenState extends State<RegisterScreen> {
       if (!mounted) return;
 
       if (success) {
-        // Get storage info for user
-        final storageInfo = await _userStorage.getStorageInfo();
+        // Store user data before clearing fields
+        final registeredName = '${_firstNameController.text.trim()} ${_lastNameController.text.trim()}';
+        final registeredAccountID = _accountIDController.text.trim();
+        final registeredCourse = _selectedCourse;
+        final registeredYear = _selectedYear;
+        
         final userCount = await _userStorage.getUserCount();
         
         setState(() {
           _isLoading = false;
         });
 
+        // Reset form state first
+        _formKey.currentState?.reset();
+        
+        // Clear all text fields after successful registration
+        _firstNameController.clear();
+        _lastNameController.clear();
+        _emailController.clear();
+        _accountIDController.clear();
+        _passwordController.clear();
+        _confirmPasswordController.clear();
+        
+        // Reset selections and checkbox
+        setState(() {
+          _selectedCourse = null;
+          _selectedYear = null;
+          _acceptedTerms = false;
+          _obscurePassword = true;
+          _obscureConfirmPassword = true;
+        });
+
         // Show success message with details
+        if (!mounted) return;
+        
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('✅ Registration Successful! Total users: $userCount'),
             backgroundColor: Colors.green,
-            duration: const Duration(seconds: 4),
+            duration: const Duration(seconds: 3),
             action: SnackBarAction(
               label: 'Details',
               textColor: Colors.white,
               onPressed: () {
+                if (!mounted) return;
+                
                 showDialog(
                   context: context,
-                  builder: (context) => AlertDialog(
-                    title: const Text('Registration Details'),
+                  builder: (dialogContext) => AlertDialog(
+                    title: const Text('Registration Successful'),
                     content: SingleChildScrollView(
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           const Text(
-                            '✅ User saved successfully!',
+                            '✅ Account created successfully!',
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                               color: Colors.green,
                             ),
                           ),
                           const SizedBox(height: 16),
-                          _buildDetailRow('Name', '${_firstNameController.text} ${_lastNameController.text}'),
-                          _buildDetailRow('Account ID', _accountIDController.text),
-                          _buildDetailRow('Course', _selectedCourse ?? 'N/A'),
-                          _buildDetailRow('Year Level', _selectedYear != null ? 'Year $_selectedYear' : 'N/A'),
-                          _buildDetailRow('Total Users', '$userCount'),
-                          const SizedBox(height: 12),
-                          const Divider(),
-                          const SizedBox(height: 12),
+                          _buildDetailRow('Name', registeredName),
+                          _buildDetailRow('Account ID', registeredAccountID),
+                          _buildDetailRow('Course', registeredCourse ?? 'N/A'),
+                          _buildDetailRow('Year Level', registeredYear != null ? 'Year $registeredYear' : 'N/A'),
+                          const SizedBox(height: 16),
                           const Text(
-                            '🔐 Password Security:',
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                          const SizedBox(height: 8),
-                          const Text(
-                            '• Hashed with BCrypt\n• Stored securely\n• Cannot be reversed',
-                            style: TextStyle(fontSize: 12),
-                          ),
-                          const SizedBox(height: 12),
-                          const Divider(),
-                          const SizedBox(height: 12),
-                          const Text(
-                            '📁 Storage Location:',
-                            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
-                          ),
-                          const SizedBox(height: 4),
-                          SelectableText(
-                            storageInfo,
-                            style: const TextStyle(
-                              fontSize: 10,
-                              fontFamily: 'monospace',
+                            'You can now login with your credentials.',
+                            style: TextStyle(
+                              fontSize: 13,
+                              color: Colors.grey,
+                              fontStyle: FontStyle.italic,
                             ),
                           ),
                         ],
@@ -252,7 +242,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     ),
                     actions: [
                       TextButton(
-                        onPressed: () => Navigator.pop(context),
+                        onPressed: () => Navigator.pop(dialogContext),
                         child: const Text('Close'),
                       ),
                     ],
@@ -263,27 +253,21 @@ class _RegisterScreenState extends State<RegisterScreen> {
           ),
         );
 
-        // Clear form after successful registration
-        _formKey.currentState!.reset();
-        _firstNameController.clear();
-        _lastNameController.clear();
-        _emailController.clear();
-        _accountIDController.clear();
-        _passwordController.clear();
-        _confirmPasswordController.clear();
-        setState(() {
-          _acceptedTerms = false;
-          _selectedCourse = null;
-          _selectedYear = null;
-        });
+        // Navigate back to login after delay
+        await Future.delayed(const Duration(seconds: 6));
+        if (mounted) {
+          Navigator.pop(context);
+        }
       } else {
         setState(() {
           _isLoading = false;
         });
+        
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('❌ Registration failed. Please try again.'),
-            backgroundColor: Colors.red,
+            content: Text('❌ Account ID already exists! Please use a different ID.'),
+            backgroundColor: Colors.orange,
+            duration: Duration(seconds: 3),
           ),
         );
       }
@@ -760,3 +744,5 @@ class _RegisterScreenState extends State<RegisterScreen> {
     );
   }
 }
+
+

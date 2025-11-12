@@ -1,47 +1,68 @@
-import 'package:flutter/foundation.dart';
+﻿import 'package:flutter/foundation.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../domain/usecases/login_usecase.dart';
+import '../providers/login_providers.dart';
 
-/// ViewModel for login screen
-/// Following MVVM pattern and Separation of Concerns
-class LoginViewModel extends ChangeNotifier {
-  final LoginUseCase _loginUseCase;
+part 'login_viewmodel.g.dart';
 
-  LoginViewModel(this._loginUseCase);
+@immutable
+class LoginState {
+  final bool isLoading;
+  final bool showLoginForm;
+  final bool obscurePassword;
+  final String? errorMessage;
 
-  bool _isLoading = false;
-  bool _showLoginForm = false;
-  bool _obscurePassword = true;
+  const LoginState({
+    this.isLoading = false,
+    this.showLoginForm = false,
+    this.obscurePassword = true,
+    this.errorMessage,
+  });
 
-  bool get isLoading => _isLoading;
-  bool get showLoginForm => _showLoginForm;
-  bool get obscurePassword => _obscurePassword;
+  LoginState copyWith({
+    bool? isLoading,
+    bool? showLoginForm,
+    bool? obscurePassword,
+    String? errorMessage,
+  }) {
+    return LoginState(
+      isLoading: isLoading ?? this.isLoading,
+      showLoginForm: showLoginForm ?? this.showLoginForm,
+      obscurePassword: obscurePassword ?? this.obscurePassword,
+      errorMessage: errorMessage ?? this.errorMessage,
+    );
+  }
+}
+
+@riverpod
+class LoginViewModel extends _$LoginViewModel {
+  @override
+  LoginState build() {
+    return const LoginState();
+  }
 
   void toggleLoginForm() {
-    _showLoginForm = !_showLoginForm;
-    notifyListeners();
+    state = state.copyWith(showLoginForm: !state.showLoginForm);
   }
 
   void togglePasswordVisibility() {
-    _obscurePassword = !_obscurePassword;
-    notifyListeners();
+    state = state.copyWith(obscurePassword: !state.obscurePassword);
   }
 
   Future<LoginResult> login(String accountId, String password) async {
-    _isLoading = true;
-    notifyListeners();
-
+    state = state.copyWith(isLoading: true, errorMessage: null);
     try {
-      final result = await _loginUseCase.execute(accountId, password);
+      final loginUseCase = ref.read(loginUseCaseProvider);
+      final result = await loginUseCase.execute(accountId, password);
+      state = state.copyWith(isLoading: false);
       return result;
-    } finally {
-      _isLoading = false;
-      notifyListeners();
+    } catch (e) {
+      state = state.copyWith(isLoading: false, errorMessage: e.toString());
+      return LoginResult.error('An error occurred during login');
     }
   }
 
   void reset() {
-    _showLoginForm = false;
-    _obscurePassword = true;
-    notifyListeners();
+    state = const LoginState();
   }
 }

@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import '../../core/constants/app_colors.dart';
 import '../../core/constants/app_dimensions.dart';
 
-/// Reusable custom button widget
-/// Following Open/Closed Principle
+
 class CustomButton extends StatelessWidget {
   final String label;
   final VoidCallback? onPressed;

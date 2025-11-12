@@ -1,4 +1,4 @@
-import '../../domain/repositories/auth_repository.dart';
+﻿import '../../domain/repositories/auth_repository.dart';
 import '../../authenticator.dart';
 
 /// Implementation of AuthRepository using the existing Authenticator

@@ -3,8 +3,7 @@ import 'package:flutter/services.dart';
 import '../../core/constants/app_colors.dart';
 import '../../core/constants/app_dimensions.dart';
 
-/// Reusable custom text field widget
-/// Following Open/Closed Principle - open for extension, closed for modification
+
 class CustomTextField extends StatelessWidget {
   final TextEditingController controller;
   final FocusNode? focusNode;

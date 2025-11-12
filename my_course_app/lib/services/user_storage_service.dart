@@ -1,13 +1,9 @@
-import 'dart:convert';
-import 'package:shared_preferences/shared_preferences.dart';
+﻿import 'package:shared_preferences/shared_preferences.dart';
 
-/// Service for managing persistent user data storage
-/// Uses SharedPreferences for cross-platform support (including web)
 class UserStorageService {
-  static const String _storageKey = 'registered_users';
+  static const String _storageKey = 'flutter.registered_users';
 
-  /// Save a new user to storage
-  /// Format: firstName,lastName,accountID,hashedPassword,course,year
+  /// Save user data to SharedPreferences (CSV format)
   Future<bool> saveUser({
     required String firstName,
     required String lastName,
@@ -17,125 +13,98 @@ class UserStorageService {
     int? year,
   }) async {
     try {
-      // Check if user already exists
-      if (await userExists(accountID)) {
-        return false;
-      }
-
-      // Get existing users
       final prefs = await SharedPreferences.getInstance();
+      
+      // Get existing users
       final existingData = prefs.getString(_storageKey) ?? '';
       
-      // Create CSV line for new user (include course and year)
-      final userData = '$firstName,$lastName,$accountID,$hashedPassword,${course ?? 'N/A'},${year ?? 0}';
-      
-      // Append to existing data
-      final newData = existingData.isEmpty 
-          ? userData 
-          : '$existingData\n$userData';
-      
-      // Save to storage
-      await prefs.setString(_storageKey, newData);
-      
-      return true;
-    } catch (e) {
-      print('Error saving user: $e');
-      return false;
-    }
-  }
-
-  /// Check if a user with the given accountID already exists
-  Future<bool> userExists(String accountID) async {
-    try {
-      final prefs = await SharedPreferences.getInstance();
-      final data = prefs.getString(_storageKey) ?? '';
-      
-      if (data.isEmpty) return false;
-
-      final lines = LineSplitter.split(data);
-
-      for (final line in lines) {
-        if (line.trim().isEmpty) continue;
-        final parts = line.split(',');
-        if (parts.length >= 3) {
-          final fileAccountID = parts[2].trim();
-          if (fileAccountID == accountID) {
-            return true;
+      // Check for duplicate account ID
+      if (existingData.isNotEmpty) {
+        final lines = existingData.split('\n');
+        for (final line in lines) {
+          if (line.trim().isEmpty) continue;
+          final parts = line.split(',');
+          if (parts.length >= 3 && parts[2].trim() == accountID) {
+            return false; // Duplicate found
           }
         }
       }
       
-      return false;
+      // Create new user entry (CSV format)
+      final userEntry = '$firstName,$lastName,$accountID,$hashedPassword,${course ?? ''},${year ?? ''}\n';
+      
+      // Append to existing data
+      final newData = existingData + userEntry;
+      
+      // Save to SharedPreferences
+      await prefs.setString(_storageKey, newData);
+      
+      return true;
     } catch (e) {
-      print('Error checking if user exists: $e');
       return false;
     }
   }
 
-  /// Get all registered users
-  Future<List<Map<String, String>>> getAllUsers() async {
+  /// Get storage information
+  Future<Map<String, dynamic>> getStorageInfo() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final keys = prefs.getKeys();
+      
+      return {
+        'type': 'Browser Local Storage (SharedPreferences)',
+        'keys': keys.toList(),
+        'userStorageKey': _storageKey,
+      };
+    } catch (e) {
+      return {
+        'type': 'Unknown',
+        'keys': [],
+        'userStorageKey': _storageKey,
+      };
+    }
+  }
+
+  /// Get total number of registered users
+  Future<int> getUserCount() async {
     try {
       final prefs = await SharedPreferences.getInstance();
       final data = prefs.getString(_storageKey) ?? '';
       
-      if (data.isEmpty) return [];
-
-      final lines = LineSplitter.split(data);
-      final users = <Map<String, String>>[];
-
-      for (final line in lines) {
-        if (line.trim().isEmpty) continue;
-        final parts = line.split(',');
-        if (parts.length >= 4) {
-          users.add({
-            'firstName': parts[0].trim(),
-            'lastName': parts[1].trim(),
-            'accountID': parts[2].trim(),
-            'hashedPassword': parts[3].trim(),
-            'course': parts.length > 4 ? parts[4].trim() : 'N/A',
-            'year': parts.length > 5 ? parts[5].trim() : '0',
-          });
-        }
+      if (data.isEmpty) {
+        return 0;
       }
-
-      return users;
+      
+      final lines = data.split('\n').where((line) => line.trim().isNotEmpty);
+      final count = lines.length;
+      
+      return count;
     } catch (e) {
-      print('Error getting all users: $e');
-      return [];
+      return 0;
     }
   }
 
-  /// Get the count of registered users
-  Future<int> getUserCount() async {
-    final users = await getAllUsers();
-    return users.length;
-  }
-
-  /// Clear all user data (use with caution!)
+  /// Clear all user data (for testing purposes)
   Future<bool> clearAllUsers() async {
     try {
       final prefs = await SharedPreferences.getInstance();
       await prefs.remove(_storageKey);
+      
       return true;
     } catch (e) {
-      print('Error clearing users: $e');
       return false;
     }
   }
 
-  /// Export users data as CSV string
-  Future<String> exportUsersAsCSV() async {
+  /// Get all users data (for admin purposes - be careful with this!)
+  Future<String> getAllUsersData() async {
     try {
       final prefs = await SharedPreferences.getInstance();
-      return prefs.getString(_storageKey) ?? '';
+      final data = prefs.getString(_storageKey) ?? '';
+      
+      return data;
     } catch (e) {
-      print('Error exporting users: $e');
       return '';
     }
-  }
-
-  /// Get storage info for debugging
-  Future<String> getStorageInfo() async {
-    return 'Browser Local Storage (SharedPreferences) - Key: $_storageKey';
   }
 }
