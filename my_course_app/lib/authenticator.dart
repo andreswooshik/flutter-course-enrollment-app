@@ -1,41 +1,71 @@
-import 'dart:convert';
-import 'package:flutter/services.dart' show rootBundle;
+﻿import 'dart:convert';
+
 import 'package:bcrypt/bcrypt.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Authenticator {
-  final String usersAssetPath;
+  static const String _storageKey = 'flutter.registered_users';
 
-  Authenticator({this.usersAssetPath = 'assets/newStudent.txt'});
-
-  /// Authenticate user with BCrypt password verification
+  /// Authenticate user against browser storage
   Future<bool> authenticate(String accountID, String password) async {
-    final content = await rootBundle.loadString(usersAssetPath);
-    final lines = LineSplitter.split(content);
-    
-    for (final line in lines) {
-      if (line.trim().isEmpty) continue;
-      final parts = line.split(',');
-      if (parts.length >= 4) {
-        final fileAccountID = parts[2].trim();
-        final fileHashedPassword = parts[3].trim();
-        
-        if (fileAccountID == accountID) {
-          // BCrypt password verification
-          return BCrypt.checkpw(password, fileHashedPassword);
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final usersJson = prefs.getString(_storageKey);
+
+      if (usersJson == null || usersJson.isEmpty) {
+        // ignore: prefer_const_constructors
+        // Logger.debug('No users found in storage');
+        return false;
+      }
+
+      // Logger.debug('Checking authentication for account: $accountID');
+
+      // Parse the stored users (CSV format: firstName,lastName,accountID,hashedPassword,course,year)
+      final lines = LineSplitter.split(usersJson);
+
+      for (final line in lines) {
+        if (line.trim().isEmpty) continue;
+        final parts = line.split(',');
+
+        if (parts.length >= 4) {
+          final storedAccountID = parts[2].trim();
+          final storedHashedPassword = parts[3].trim();
+
+          if (storedAccountID == accountID) {
+            // Logger.debug('Found user: $accountID');
+            // Logger.debug('Verifying password...');
+
+            // Verify password with BCrypt
+            final isValid = BCrypt.checkpw(password, storedHashedPassword);
+
+            if (isValid) {
+              // Logger.success('Password verified for user: $accountID');
+            } else {
+              // Logger.debug('Password verification failed for user: $accountID');
+            }
+
+            return isValid;
+          }
         }
       }
+
+      // Logger.debug('Account ID not found: $accountID');
+      return false;
+    } catch (e) {
+      // Logger.error('Authentication error', e, stackTrace);
+      return false;
     }
-    return false;
   }
 
-  /// Hash password with BCrypt (for registration/password updates)
+  /// Hash a password with BCrypt
   String hashPassword(String password) {
-    // Generate salt with 10 rounds (good balance of security and speed)
+    // Logger.debug('Hashing password with BCrypt');
     return BCrypt.hashpw(password, BCrypt.gensalt());
   }
-  
-  /// Hash password with custom salt rounds
+
+  /// Hash a password with specific rounds
   String hashPasswordWithRounds(String password, int rounds) {
+    // Logger.debug('Hashing password with BCrypt (rounds: $rounds)');
     return BCrypt.hashpw(password, BCrypt.gensalt(logRounds: rounds));
   }
 }

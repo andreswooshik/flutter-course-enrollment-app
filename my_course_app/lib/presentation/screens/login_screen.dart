@@ -1,6 +1,6 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../core/constants/app_colors.dart';
 import '../../core/constants/app_dimensions.dart';
 import '../../core/constants/app_strings.dart';
@@ -10,21 +10,15 @@ import '../widgets/custom_button.dart';
 import '../widgets/custom_text_field.dart';
 import '../widgets/snackbar_helper.dart';
 
-/// Login screen following SOLID principles
-/// Single Responsibility: Only handles UI logic
-class LoginScreen extends StatefulWidget {
-  final LoginViewModel viewModel;
 
-  const LoginScreen({
-    Key? key,
-    required this.viewModel,
-  }) : super(key: key);
+class LoginScreen extends ConsumerStatefulWidget {
+  const LoginScreen({Key? key}) : super(key: key);
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  ConsumerState<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen>
+class _LoginScreenState extends ConsumerState<LoginScreen>
     with SingleTickerProviderStateMixin {
   final _formKey = GlobalKey<FormState>();
   final _accountController = TextEditingController();
@@ -75,7 +69,8 @@ class _LoginScreenState extends State<LoginScreen>
 
     if (!_formKey.currentState!.validate()) return;
 
-    final result = await widget.viewModel.login(
+    final viewModel = ref.read(loginViewModelProvider.notifier);
+    final result = await viewModel.login(
       _accountController.text.trim(),
       _passwordController.text,
     );
@@ -105,8 +100,10 @@ class _LoginScreenState extends State<LoginScreen>
   }
 
   void _toggleLoginForm() {
-    widget.viewModel.toggleLoginForm();
-    if (widget.viewModel.showLoginForm) {
+    ref.read(loginViewModelProvider.notifier).toggleLoginForm();
+    final showLoginForm = ref.read(loginViewModelProvider).showLoginForm;
+    
+    if (showLoginForm) {
       _animationController.forward();
       Future.delayed(const Duration(milliseconds: 400), () {
         if (mounted) _accountFocusNode.requestFocus();
@@ -121,45 +118,40 @@ class _LoginScreenState extends State<LoginScreen>
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider.value(
-      value: widget.viewModel,
-      child: GestureDetector(
-        onTap: () => FocusScope.of(context).unfocus(),
-        child: Scaffold(
-          backgroundColor: AppColors.backgroundGray,
-          body: SafeArea(
-            child: LayoutBuilder(
-              builder: (context, constraints) {
-                final horizontalPadding = constraints.maxWidth > 600
-                    ? AppDimensions.tabletPadding
-                    : AppDimensions.mobilePadding;
+    final loginState = ref.watch(loginViewModelProvider);
+    
+    return GestureDetector(
+      onTap: () => FocusScope.of(context).unfocus(),
+      child: Scaffold(
+        backgroundColor: AppColors.backgroundGray,
+        body: SafeArea(
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              final horizontalPadding = constraints.maxWidth > 600
+                  ? AppDimensions.tabletPadding
+                  : AppDimensions.mobilePadding;
 
-                return SingleChildScrollView(
-                  physics: const ClampingScrollPhysics(),
-                  child: ConstrainedBox(
-                    constraints: BoxConstraints(
-                      minHeight: constraints.maxHeight,
-                      maxWidth: AppDimensions.maxContentWidth,
-                    ),
-                    child: Center(
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: horizontalPadding,
-                          vertical: AppDimensions.spacing20,
-                        ),
-                        child: Consumer<LoginViewModel>(
-                          builder: (context, viewModel, child) {
-                            return viewModel.showLoginForm
-                                ? _buildLoginForm(viewModel)
-                                : _buildWelcomeScreen();
-                          },
-                        ),
+              return SingleChildScrollView(
+                physics: const ClampingScrollPhysics(),
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(
+                    minHeight: constraints.maxHeight,
+                    maxWidth: AppDimensions.maxContentWidth,
+                  ),
+                  child: Center(
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: horizontalPadding,
+                        vertical: AppDimensions.spacing20,
                       ),
+                      child: loginState.showLoginForm
+                          ? _buildLoginForm(loginState)
+                          : _buildWelcomeScreen(),
                     ),
                   ),
-                );
-              },
-            ),
+                ),
+              );
+            },
           ),
         ),
       ),
@@ -206,13 +198,13 @@ class _LoginScreenState extends State<LoginScreen>
           borderRadius: BorderRadius.circular(AppDimensions.radiusXLarge),
           boxShadow: [
             BoxShadow(
-              color: AppColors.primaryBlue.withOpacity(0.15),
+              color: AppColors.primaryBlue.withValues(alpha: 0.15),
               blurRadius: 30,
               offset: const Offset(0, 10),
             ),
           ],
           border: Border.all(
-            color: AppColors.accentGold.withOpacity(0.3),
+            color: AppColors.accentGold.withValues(alpha: 0.3),
             width: 3,
           ),
         ),
@@ -256,7 +248,7 @@ class _LoginScreenState extends State<LoginScreen>
         vertical: AppDimensions.spacing8,
       ),
       decoration: BoxDecoration(
-        color: AppColors.accentGold.withOpacity(0.1),
+        color: AppColors.accentGold.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(AppDimensions.radiusXLarge),
       ),
       child: const Text(
@@ -272,7 +264,7 @@ class _LoginScreenState extends State<LoginScreen>
     );
   }
 
-  Widget _buildLoginForm(LoginViewModel viewModel) {
+  Widget _buildLoginForm(LoginState loginState) {
     return FadeTransition(
       opacity: _fadeAnimation,
       child: SlideTransition(
@@ -283,7 +275,7 @@ class _LoginScreenState extends State<LoginScreen>
           children: [
             const SizedBox(height: AppDimensions.spacing20),
             IconButton(
-              onPressed: viewModel.isLoading ? null : _toggleLoginForm,
+              onPressed: loginState.isLoading ? null : _toggleLoginForm,
               icon: const Icon(Icons.arrow_back),
               color: AppColors.primaryBlue,
               iconSize: 28,
@@ -302,12 +294,13 @@ class _LoginScreenState extends State<LoginScreen>
               AppStrings.loginSubtitle,
               style: TextStyle(
                 fontSize: 16,
-                color: AppColors.darkBlue.withOpacity(0.6),
+                color: AppColors.darkBlue.withValues(alpha: 0.6),
               ),
             ),
             const SizedBox(height: AppDimensions.spacing40),
             Form(
               key: _formKey,
+              autovalidateMode: AutovalidateMode.disabled,
               child: Column(
                 children: [
                   CustomTextField(
@@ -315,7 +308,7 @@ class _LoginScreenState extends State<LoginScreen>
                     focusNode: _accountFocusNode,
                     labelText: AppStrings.accountIdLabel,
                     prefixIcon: Icons.person_outline,
-                    enabled: !viewModel.isLoading,
+                    enabled: !loginState.isLoading,
                     inputFormatters: [
                       FilteringTextInputFormatter.deny(RegExp(r'\s')),
                     ],
@@ -336,20 +329,23 @@ class _LoginScreenState extends State<LoginScreen>
                     focusNode: _passwordFocusNode,
                     labelText: AppStrings.passwordLabel,
                     prefixIcon: Icons.lock_outline,
-                    obscureText: viewModel.obscurePassword,
-                    enabled: !viewModel.isLoading,
+                    obscureText: loginState.obscurePassword,
+                    enabled: !loginState.isLoading,
                     textInputAction: TextInputAction.done,
                     onFieldSubmitted: (_) {
-                      if (!viewModel.isLoading) _handleLogin();
+                      if (!loginState.isLoading) _handleLogin();
                     },
                     suffixIcon: IconButton(
                       icon: Icon(
-                        viewModel.obscurePassword
+                        loginState.obscurePassword
                             ? Icons.visibility_outlined
                             : Icons.visibility_off_outlined,
                         color: AppColors.primaryBlue,
                       ),
-                      onPressed: viewModel.togglePasswordVisibility,
+                      onPressed: () {
+                        ref.read(loginViewModelProvider.notifier)
+                            .togglePasswordVisibility();
+                      },
                     ),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
@@ -367,12 +363,12 @@ class _LoginScreenState extends State<LoginScreen>
                     onPressed: _handleLogin,
                     isPrimary: true,
                     icon: Icons.arrow_forward_rounded,
-                    isLoading: viewModel.isLoading,
+                    isLoading: loginState.isLoading,
                   ),
                   const SizedBox(height: AppDimensions.spacing24),
                   Center(
                     child: TextButton(
-                      onPressed: viewModel.isLoading
+                      onPressed: loginState.isLoading
                           ? null
                           : () => Navigator.pushNamed(context, '/register'),
                       child: Row(
@@ -381,7 +377,7 @@ class _LoginScreenState extends State<LoginScreen>
                           Text(
                             AppStrings.noAccountText,
                             style: TextStyle(
-                              color: AppColors.darkBlue.withOpacity(0.6),
+                              color: AppColors.darkBlue.withValues(alpha: 0.6),
                               fontSize: 16,
                             ),
                           ),
@@ -406,3 +402,4 @@ class _LoginScreenState extends State<LoginScreen>
     );
   }
 }
+

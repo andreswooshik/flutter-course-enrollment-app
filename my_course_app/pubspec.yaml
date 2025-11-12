@@ -43,13 +43,19 @@ dependencies:
   # Shared preferences for web storage
   shared_preferences: ^2.2.2
   
-  # Provider for state management (MVVM pattern)
-  provider: ^6.1.1
+  # Riverpod for state management (replaces provider)
+  flutter_riverpod: ^3.0.3
+  # Annotation package for Riverpod code generation
+  riverpod_annotation: ^3.0.3
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^5.0.0
+  flutter_lints: ^2.0.0
+
+  # Code generation tools for Riverpod
+  build_runner: ^2.4.13
+  riverpod_generator: ^3.0.3
 
 # Flutter-specific settings
 flutter:

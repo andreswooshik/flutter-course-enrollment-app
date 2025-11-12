@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../core/constants/app_colors.dart';
 
-/// Home Screen - Main dashboard after successful login
+
 class HomeScreen extends StatelessWidget {
   const HomeScreen({Key? key}) : super(key: key);
 
@@ -13,7 +13,7 @@ class HomeScreen extends StatelessWidget {
         backgroundColor: AppColors.primaryBlue,
         foregroundColor: AppColors.white,
         elevation: 0,
-        automaticallyImplyLeading: false, // Remove back button
+        automaticallyImplyLeading: false, 
       ),
       body: Center(
         child: Padding(
@@ -21,7 +21,7 @@ class HomeScreen extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              // Welcome Icon
+              
               Container(
                 padding: const EdgeInsets.all(24),
                 decoration: BoxDecoration(
@@ -37,7 +37,7 @@ class HomeScreen extends StatelessWidget {
               
               const SizedBox(height: 32),
               
-              // Welcome Title
+              
               const Text(
                 'Welcome to USJR!',
                 style: TextStyle(
@@ -49,7 +49,7 @@ class HomeScreen extends StatelessWidget {
               
               const SizedBox(height: 16),
               
-              // Subtitle
+             
               const Text(
                 'Course Enrollment System',
                 style: TextStyle(
@@ -61,7 +61,7 @@ class HomeScreen extends StatelessWidget {
               
               const SizedBox(height: 8),
               
-              // Motto
+       
               Container(
                 padding: const EdgeInsets.symmetric(
                   horizontal: 20,
@@ -84,13 +84,13 @@ class HomeScreen extends StatelessWidget {
               
               const SizedBox(height: 64),
               
-              // Course Enrollment Button (Placeholder)
+            
               SizedBox(
                 width: double.infinity,
                 height: 56,
                 child: ElevatedButton.icon(
                   onPressed: () {
-                    // TODO: Navigate to course enrollment screen
+                
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
                         content: Text('Course enrollment feature coming soon!'),
@@ -119,13 +119,13 @@ class HomeScreen extends StatelessWidget {
               
               const SizedBox(height: 16),
               
-              // Logout Button
+         
               SizedBox(
                 width: double.infinity,
                 height: 56,
                 child: OutlinedButton.icon(
                   onPressed: () {
-                    // Show confirmation dialog
+             
                     showDialog(
                       context: context,
                       builder: (BuildContext context) {
@@ -138,14 +138,14 @@ class HomeScreen extends StatelessWidget {
                           actions: [
                             TextButton(
                               onPressed: () {
-                                Navigator.of(context).pop(); // Close dialog
+                                Navigator.of(context).pop();
                               },
                               child: const Text('Cancel'),
                             ),
                             ElevatedButton(
                               onPressed: () {
-                                Navigator.of(context).pop(); // Close dialog
-                                Navigator.pushReplacementNamed(context, '/'); // Go to login
+                                Navigator.of(context).pop();
+                                Navigator.pushReplacementNamed(context, '/'); 
                               },
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: AppColors.error,

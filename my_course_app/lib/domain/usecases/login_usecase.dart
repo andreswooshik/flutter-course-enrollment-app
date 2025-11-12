@@ -1,7 +1,6 @@
 import '../repositories/auth_repository.dart';
 
-/// Use case for login operation
-/// Following Single Responsibility Principle
+
 class LoginUseCase {
   final AuthRepository _authRepository;
 
