@@ -5,12 +5,12 @@ import '../authenticator.dart';
 part 'auth_provider.g.dart';
 
 @riverpod
-Authenticator authenticator(Ref ref) {  // ← Changed from AuthenticatorRef
+Authenticator authenticator(Ref ref) {  
   return Authenticator();
 }
 
 @riverpod
-AuthRepositoryImpl authRepository(Ref ref) {  // ← Changed from AuthRepositoryRef
+AuthRepositoryImpl authRepository(Ref ref) { 
   final authenticator = ref.watch(authenticatorProvider);
   return AuthRepositoryImpl(authenticator);
 }

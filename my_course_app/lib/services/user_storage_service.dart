@@ -107,4 +107,35 @@ class UserStorageService {
       return '';
     }
   }
+
+  /// Get user profile by account ID
+  Future<Map<String, String>?> getUserProfile(String accountId) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final data = prefs.getString(_storageKey) ?? '';
+
+      if (data.isEmpty) return null;
+
+      final lines = data.split('\n');
+      for (final line in lines) {
+        if (line.trim().isEmpty) continue;
+        
+        final parts = line.split(',');
+        if (parts.length >= 6 && parts[2].trim() == accountId) {
+          // Found the user! Return profile data
+          return {
+            'firstName': parts[0].trim(),
+            'lastName': parts[1].trim(),
+            'accountId': parts[2].trim(),
+            'course': parts[4].trim(),
+            'year': parts[5].trim(),
+          };
+        }
+      }
+
+      return null; // User not found
+    } catch (e) {
+      return null;
+    }
+  }
 }

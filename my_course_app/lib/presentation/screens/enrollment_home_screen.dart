@@ -5,6 +5,9 @@ import '../widgets/custom_app_bar.dart';
 import '../widgets/screen_header.dart';
 import '../widgets/bottom_bar.dart';
 import '../widgets/enrollment_status_card.dart';
+import 'subject_list_screen.dart';
+import 'my_subjects_screen.dart';
+import 'profile_screen.dart'; // Import ProfileScreen
 
 class EnrollmentHomeScreen extends ConsumerWidget {
   const EnrollmentHomeScreen({super.key});
@@ -15,7 +18,22 @@ class EnrollmentHomeScreen extends ConsumerWidget {
     final totalUnitsAsync = ref.watch(totalEnrolledUnitsProvider);
 
     return Scaffold(
-      appBar: const CustomAppBar(),
+      appBar: CustomAppBar(
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.account_circle, color: Colors.white),
+            tooltip: 'Profile',
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const ProfileScreen(),
+                ),
+              );
+            },
+          ),
+        ],
+      ),
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -30,7 +48,6 @@ class EnrollmentHomeScreen extends ConsumerWidget {
                   ),
                   const SizedBox(height: 24),
 
-              
                   totalUnitsAsync.when(
                     data: (totalUnits) {
                       return enrolledSubjectsAsync.when(
@@ -59,7 +76,6 @@ class EnrollmentHomeScreen extends ConsumerWidget {
 
                   const SizedBox(height: 24),
 
-    
                   _buildQuickActions(context, ref),
 
                   const SizedBox(height: 100),
@@ -76,10 +92,7 @@ class EnrollmentHomeScreen extends ConsumerWidget {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => const PlaceholderScreen(
-                title: "Subject List",
-                message: "Subject List Screen - Coming in next step!",
-              ),
+              builder: (context) => const SubjectListScreen(),
             ),
           );
         },
@@ -90,10 +103,7 @@ class EnrollmentHomeScreen extends ConsumerWidget {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => const PlaceholderScreen(
-                title: "My Subjects",
-                message: "My Subjects Screen - Coming in next step!",
-              ),
+              builder: (context) => const MySubjectsScreen(),
             ),
           );
         },
@@ -128,10 +138,7 @@ class EnrollmentHomeScreen extends ConsumerWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => const PlaceholderScreen(
-                    title: "Subject List",
-                    message: "Subject List Screen - Coming in next step!",
-                  ),
+                  builder: (context) => const SubjectListScreen(),
                 ),
               );
             },
@@ -146,10 +153,7 @@ class EnrollmentHomeScreen extends ConsumerWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => const PlaceholderScreen(
-                    title: "My Subjects",
-                    message: "My Subjects Screen - Coming in next step!",
-                  ),
+                  builder: (context) => const MySubjectsScreen(),
                 ),
               );
             },
