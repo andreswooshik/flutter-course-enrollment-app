@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'auth_providers.dart';
+part of 'auth_provider.dart';
 
 // **************************************************************************
 // RiverpodGenerator
@@ -8,20 +8,13 @@ part of 'auth_providers.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
-/// Provides the Authenticator instance (file reader)
-/// This replaces: Provider<Authenticator>(create: (_) => Authenticator())
 
 @ProviderFor(authenticator)
 const authenticatorProvider = AuthenticatorProvider._();
 
-/// Provides the Authenticator instance (file reader)
-/// This replaces: Provider<Authenticator>(create: (_) => Authenticator())
-
 final class AuthenticatorProvider
     extends $FunctionalProvider<Authenticator, Authenticator, Authenticator>
     with $Provider<Authenticator> {
-  /// Provides the Authenticator instance (file reader)
-  /// This replaces: Provider<Authenticator>(create: (_) => Authenticator())
   const AuthenticatorProvider._()
     : super(
         from: null,
@@ -57,20 +50,17 @@ final class AuthenticatorProvider
 
 String _$authenticatorHash() => r'fb8e859cf94b2fd6789847e3b31fde1e9d94bd7f';
 
-/// Provides the AuthRepository implementation
-/// This replaces: ProxyProvider<Authenticator, AuthRepository>(...)
-
 @ProviderFor(authRepository)
 const authRepositoryProvider = AuthRepositoryProvider._();
 
-/// Provides the AuthRepository implementation
-/// This replaces: ProxyProvider<Authenticator, AuthRepository>(...)
-
 final class AuthRepositoryProvider
-    extends $FunctionalProvider<AuthRepository, AuthRepository, AuthRepository>
-    with $Provider<AuthRepository> {
-  /// Provides the AuthRepository implementation
-  /// This replaces: ProxyProvider<Authenticator, AuthRepository>(...)
+    extends
+        $FunctionalProvider<
+          AuthRepositoryImpl,
+          AuthRepositoryImpl,
+          AuthRepositoryImpl
+        >
+    with $Provider<AuthRepositoryImpl> {
   const AuthRepositoryProvider._()
     : super(
         from: null,
@@ -87,21 +77,22 @@ final class AuthRepositoryProvider
 
   @$internal
   @override
-  $ProviderElement<AuthRepository> $createElement($ProviderPointer pointer) =>
-      $ProviderElement(pointer);
+  $ProviderElement<AuthRepositoryImpl> $createElement(
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
 
   @override
-  AuthRepository create(Ref ref) {
+  AuthRepositoryImpl create(Ref ref) {
     return authRepository(ref);
   }
 
   /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(AuthRepository value) {
+  Override overrideWithValue(AuthRepositoryImpl value) {
     return $ProviderOverride(
       origin: this,
-      providerOverride: $SyncValueProvider<AuthRepository>(value),
+      providerOverride: $SyncValueProvider<AuthRepositoryImpl>(value),
     );
   }
 }
 
-String _$authRepositoryHash() => r'cf7de968331b999c9ba8762f7d0ac44e92e08854';
+String _$authRepositoryHash() => r'3e8ab9296e0f60d195c47f564a2b291f0396bce2';

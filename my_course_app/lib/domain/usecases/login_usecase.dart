@@ -6,9 +6,9 @@ class LoginUseCase {
 
   LoginUseCase(this._authRepository);
 
-  /// Executes login with validation
+ 
   Future<LoginResult> execute(String accountId, String password) async {
-    // Validate inputs
+  
     if (accountId.trim().isEmpty) {
       return LoginResult.failure('Account ID cannot be empty');
     }
@@ -31,7 +31,7 @@ class LoginUseCase {
   }
 }
 
-/// Result of login operation
+
 class LoginResult {
   final bool isSuccess;
   final String? message;

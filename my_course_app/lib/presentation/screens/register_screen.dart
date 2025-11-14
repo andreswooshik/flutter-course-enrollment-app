@@ -143,12 +143,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
     });
 
     try {
-      // Hash password with BCrypt (runs in background)
+      
       final passwordHash = await Future.microtask(() => 
         _authenticator.hashPassword(_passwordController.text)
       );
       
-      // Save user to persistent storage (this also checks for duplicates)
+      
       final success = await _userStorage.saveUser(
         firstName: _firstNameController.text.trim(),
         lastName: _lastNameController.text.trim(),
@@ -161,7 +161,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
       if (!mounted) return;
 
       if (success) {
-        // Store user data before clearing fields
         final registeredName = '${_firstNameController.text.trim()} ${_lastNameController.text.trim()}';
         final registeredAccountID = _accountIDController.text.trim();
         final registeredCourse = _selectedCourse;
@@ -173,18 +172,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
           _isLoading = false;
         });
 
-        // Reset form state first
+        
         _formKey.currentState?.reset();
         
-        // Clear all text fields after successful registration
-        _firstNameController.clear();
+        
         _lastNameController.clear();
         _emailController.clear();
         _accountIDController.clear();
         _passwordController.clear();
         _confirmPasswordController.clear();
         
-        // Reset selections and checkbox
+        
         setState(() {
           _selectedCourse = null;
           _selectedYear = null;
@@ -193,7 +191,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           _obscureConfirmPassword = true;
         });
 
-        // Show success message with details
+       
         if (!mounted) return;
         
         ScaffoldMessenger.of(context).showSnackBar(
@@ -253,7 +251,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           ),
         );
 
-        // Navigate back to login after delay
+        
         await Future.delayed(const Duration(seconds: 6));
         if (mounted) {
           Navigator.pop(context);
@@ -337,7 +335,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                // School Icon
+                
                 Container(
                   padding: const EdgeInsets.all(20),
                   decoration: BoxDecoration(
@@ -352,7 +350,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 ),
                 const SizedBox(height: 24),
                 
-                // Title
+               
                 Text(
                   'Student Registration',
                   style: Theme.of(context).textTheme.headlineSmall?.copyWith(
@@ -363,7 +361,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 ),
                 const SizedBox(height: 8),
                 
-                // USJR Motto
+                
                 Container(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 16,
@@ -386,7 +384,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 ),
                 const SizedBox(height: 32),
 
-                // First Name
+              
                 TextFormField(
                   controller: _firstNameController,
                   decoration: InputDecoration(
@@ -411,7 +409,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 ),
                 const SizedBox(height: 16),
 
-                // Last Name
+     
                 TextFormField(
                   controller: _lastNameController,
                   decoration: InputDecoration(
@@ -436,7 +434,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 ),
                 const SizedBox(height: 16),
 
-                // Email
                 TextFormField(
                   controller: _emailController,
                   decoration: InputDecoration(
@@ -462,7 +459,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 ),
                 const SizedBox(height: 16),
 
-                // Account ID
+
                 TextFormField(
                   controller: _accountIDController,
                   decoration: InputDecoration(
@@ -487,7 +484,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 ),
                 const SizedBox(height: 16),
 
-                // Course Selection
+           
                 DropdownButtonFormField<String>(
                   value: _selectedCourse,
                   decoration: InputDecoration(
@@ -527,7 +524,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 ),
                 const SizedBox(height: 16),
 
-                // Year Level Selection
+    
                 DropdownButtonFormField<int>(
                   value: _selectedYear,
                   decoration: InputDecoration(
@@ -567,7 +564,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 ),
                 const SizedBox(height: 16),
 
-                // Password
+     
                 TextFormField(
                   controller: _passwordController,
                   decoration: InputDecoration(
@@ -601,7 +598,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 ),
                 const SizedBox(height: 8),
 
-                // Password Strength Indicator
+     
                 if (passwordStrength.isNotEmpty)
                   Row(
                     children: [
@@ -626,7 +623,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ),
                 const SizedBox(height: 16),
 
-                // Confirm Password
+     
                 TextFormField(
                   controller: _confirmPasswordController,
                   decoration: InputDecoration(
@@ -659,7 +656,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 ),
                 const SizedBox(height: 20),
 
-                // Terms Checkbox
+    
                 Container(
                   decoration: BoxDecoration(
                     color: AppColors.white,
@@ -680,7 +677,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 ),
                 const SizedBox(height: 32),
 
-                // Register Button
+      
                 SizedBox(
                   width: double.infinity,
                   height: 56,
@@ -715,7 +712,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 ),
                 const SizedBox(height: 20),
 
-                // Login Link
+
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [

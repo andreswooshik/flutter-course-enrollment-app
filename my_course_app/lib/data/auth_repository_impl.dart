@@ -1,9 +1,10 @@
 ﻿import '../../domain/repositories/auth_repository.dart';
 import '../../authenticator.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-/// Implementation of AuthRepository using the existing Authenticator
 class AuthRepositoryImpl implements AuthRepository {
   final Authenticator _authenticator;
+  static const String _loggedInUserKey = 'logged_in_user';
 
   AuthRepositoryImpl(this._authenticator);
 
@@ -11,33 +12,46 @@ class AuthRepositoryImpl implements AuthRepository {
   Future<bool> authenticate(String accountId, String password) async {
     try {
       final result = await _authenticator.authenticate(accountId, password);
+      
+      if (result) {
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setString(_loggedInUserKey, accountId);
+      }
+      
       return result;
-    } on Exception catch (e) {
-      throw AuthException('Authentication failed: ${e.toString()}');
     } catch (e) {
-      throw AuthException('Unexpected error during authentication: ${e.toString()}');
+      throw Exception('Authentication failed');
     }
   }
 
   @override
   Future<void> logout() async {
-    // Implement logout logic based on your Authenticator class
-    // Example: await _authenticator.logout();
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.remove(_loggedInUserKey);
+    } catch (e) {
+      throw Exception('Logout failed');
+    }
   }
 
   @override
   Future<bool> isAuthenticated() async {
-    // Implement authentication check based on your Authenticator class
-    // Example: return await _authenticator.isLoggedIn();
-    return false;
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final userId = prefs.getString(_loggedInUserKey);
+      return userId != null && userId.isNotEmpty;
+    } catch (e) {
+      return false;
+    }
   }
-}
 
-/// Custom exception for authentication errors
-class AuthException implements Exception {
-  final String message;
-  AuthException(this.message);
-
-  @override
-  String toString() => message;
+  /// Get current logged-in user account ID
+  Future<String?> getCurrentUserId() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      return prefs.getString(_loggedInUserKey);
+    } catch (e) {
+      return null;
+    }
+  }
 }

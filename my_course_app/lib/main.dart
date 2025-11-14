@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'presentation/screens/login_screen.dart';
 import 'presentation/screens/home_screen.dart';
 import 'presentation/screens/register_screen.dart';
+import 'presentation/screens/enrollment_home_screen.dart';
 
 void main() {
   runApp(
@@ -25,9 +26,10 @@ class MyApp extends StatelessWidget {
         fontFamily: 'Roboto',
         useMaterial3: true,
       ),
-      home: const LoginScreen(),  
+      initialRoute: '/',
       routes: {
-        '/home': (context) => const HomeScreen(),
+        '/': (context) => const LoginScreen(),
+        '/home': (context) => const EnrollmentHomeScreen(),
         '/register': (context) => const RegisterScreen(),
       },
     );

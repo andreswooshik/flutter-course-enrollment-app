@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../core/constants/app_colors.dart';
 
-/// Helper class for showing snackbars
-/// Following Single Responsibility Principle
+
 class SnackBarHelper {
   SnackBarHelper._();
 
