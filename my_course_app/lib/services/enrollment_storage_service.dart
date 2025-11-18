@@ -75,7 +75,8 @@ class EnrollmentStorageService {
       return false;
     }
   }
-  /// Update enrollment status (e.g., from 'enrolled' to 'pending_drop')
+
+
   Future<bool> updateEnrollmentStatus(String studentId, String subjectId, String newStatus) async {
     try {
       final prefs = await SharedPreferences.getInstance();
@@ -87,7 +88,7 @@ class EnrollmentStorageService {
       final enrollments = enrollmentsList
           .map((json) => Enrollment.fromJson(json))
           .toList();
-      // Find and update the enrollment
+     
       bool found = false;
       final updatedEnrollments = enrollments.map((e) {
         if (e.studentId == studentId && e.subjectId == subjectId) {
@@ -103,7 +104,7 @@ class EnrollmentStorageService {
         return e;
       }).toList();
       if (!found) return false;
-      // Save updated enrollments
+   
       final json = jsonEncode(updatedEnrollments.map((e) => e.toJson()).toList());
       await prefs.setString(_enrollmentsKey, json);
       return true;

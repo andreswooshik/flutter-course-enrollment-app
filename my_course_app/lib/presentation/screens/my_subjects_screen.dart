@@ -27,7 +27,6 @@ class _MySubjectsScreenState extends ConsumerState<MySubjectsScreen> {
       ),
       body: Column(
         children: [
-          // Units Summary Bar
           totalUnitsAsync.when(
             data: (totalUnits) {
               return enrolledSubjectsAsync.when(
@@ -221,7 +220,7 @@ class _MySubjectsScreenState extends ConsumerState<MySubjectsScreen> {
   }
   Future<void> _handleDrop(Subject subject, int currentUnits) async {
     print('🔵 Drop button pressed for: ${subject.code}');
-    // Show confirmation dialog
+    final enrollmentActions = ref.read(enrollmentActionsProvider.notifier);
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => DropConfirmationDialog(
@@ -232,23 +231,19 @@ class _MySubjectsScreenState extends ConsumerState<MySubjectsScreen> {
         },
       ),
     );
-    print('🔵 Dialog result: $confirmed');
-    // If user didn't confirm, return
+    print('🔵 Dialog result: ${confirmed}');
     if (confirmed != true || !mounted) {
       print('🔵 User cancelled drop');
       return;
     }
     print('🔵 User confirmed, starting drop process');
-    // User confirmed, proceed with dropping
     setState(() {
       _droppingSubjectId = subject.id;
     });
     try {
       print('🔵 Calling dropSubject...');
-      // Read the provider before the async operation
-      final enrollmentActions = ref.read(enrollmentActionsProvider.notifier);
       final result = await enrollmentActions.dropSubject(subject.id);
-      print('🔵 Drop result: $result');
+      print('🔵 Drop result: ${result}');
       if (!mounted) return;
       setState(() {
         _droppingSubjectId = null;
