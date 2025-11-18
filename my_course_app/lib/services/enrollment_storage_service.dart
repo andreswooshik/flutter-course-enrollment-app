@@ -22,7 +22,7 @@ class EnrollmentStorageService {
           .toList();
 
       return allEnrollments
-          .where((e) => e.studentId == studentId)
+          .where((e) => e.studentId == studentId && e.status != 'dropped')
           .toList();
     } catch (e) {
       return [];
@@ -32,7 +32,7 @@ class EnrollmentStorageService {
  
   Future<bool> isEnrolled(String studentId, String subjectId) async {
     final enrollments = await getStudentEnrollments(studentId);
-    return enrollments.any((e) => e.subjectId == subjectId);
+    return enrollments.any((e) => e.subjectId == subjectId && e.status == 'enrolled');
   }
 
  
@@ -55,6 +55,7 @@ class EnrollmentStorageService {
         studentId: studentId,
         subjectId: subjectId,
         enrolledAt: DateTime.now(),
+        status: 'enrolled',
       );
 
       enrollments.add(enrollment);
@@ -91,6 +92,49 @@ class EnrollmentStorageService {
 
       
       final json = jsonEncode(enrollments.map((e) => e.toJson()).toList());
+      await prefs.setString(_enrollmentsKey, json);
+
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  /// Update enrollment status (e.g., from 'enrolled' to 'pending_drop')
+  Future<bool> updateEnrollmentStatus(String studentId, String subjectId, String newStatus) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final enrollmentsJson = prefs.getString(_enrollmentsKey);
+
+      if (enrollmentsJson == null || enrollmentsJson.isEmpty) {
+        return false;
+      }
+
+      final List<dynamic> enrollmentsList = jsonDecode(enrollmentsJson);
+      final enrollments = enrollmentsList
+          .map((json) => Enrollment.fromJson(json))
+          .toList();
+
+      // Find and update the enrollment
+      bool found = false;
+      final updatedEnrollments = enrollments.map((e) {
+        if (e.studentId == studentId && e.subjectId == subjectId) {
+          found = true;
+          return Enrollment(
+            id: e.id,
+            studentId: e.studentId,
+            subjectId: e.subjectId,
+            enrolledAt: e.enrolledAt,
+            status: newStatus,
+          );
+        }
+        return e;
+      }).toList();
+
+      if (!found) return false;
+
+      // Save updated enrollments
+      final json = jsonEncode(updatedEnrollments.map((e) => e.toJson()).toList());
       await prefs.setString(_enrollmentsKey, json);
 
       return true;

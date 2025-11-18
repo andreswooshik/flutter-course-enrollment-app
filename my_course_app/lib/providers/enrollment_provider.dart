@@ -1,6 +1,7 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../domain/models/enrollment.dart';
 import '../domain/models/subject.dart';
+import '../domain/models/enrolled_subject.dart';
 import '../services/enrollment_storage_service.dart';
 import '../utils/constants.dart';
 import 'auth_provider.dart';
@@ -25,25 +26,31 @@ Future<List<Enrollment>> studentEnrollments(Ref ref) async {
 }
 
 @riverpod
-Future<List<Subject>> enrolledSubjects(Ref ref) async {  
+Future<List<EnrolledSubject>> enrolledSubjects(Ref ref) async {  
   final enrollments = await ref.watch(studentEnrollmentsProvider.future);
   final subjectService = ref.watch(subjectStorageServiceProvider);
 
-  final List<Subject> subjects = [];
+  final List<EnrolledSubject> enrolledSubjects = [];
   for (final enrollment in enrollments) {
     final subject = await subjectService.getSubjectById(enrollment.subjectId);
     if (subject != null) {
-      subjects.add(subject);
+      enrolledSubjects.add(EnrolledSubject(
+        subject: subject,
+        enrollment: enrollment,
+      ));
     }
   }
 
-  return subjects;
+  return enrolledSubjects;
 }
 
 @riverpod
 Future<int> totalEnrolledUnits(Ref ref) async { 
-  final subjects = await ref.watch(enrolledSubjectsProvider.future);
-  return subjects.fold<int>(0, (sum, subject) => sum + subject.units);
+  final enrolledSubjects = await ref.watch(enrolledSubjectsProvider.future);
+  // Only count units for subjects that are fully enrolled (not pending drop)
+  return enrolledSubjects
+      .where((es) => es.status == 'enrolled')
+      .fold<int>(0, (sum, es) => sum + es.subject.units);
 }
 
 @riverpod
@@ -124,12 +131,14 @@ class EnrollmentActions extends _$EnrollmentActions {
         return 'Subject not found';
       }
 
-      final success = await enrollmentService.removeEnrollment(studentId, subjectId);
+      // Update status to 'pending_drop' instead of removing
+      final success = await enrollmentService.updateEnrollmentStatus(studentId, subjectId, 'pending_drop');
       if (!success) {
         return 'Failed to drop subject';
       }
 
-      await subjectService.updateSubjectEnrollment(subjectId, subject.enrolled - 1);
+      // Don't decrease enrolled count yet - wait for admin approval
+      // await subjectService.updateSubjectEnrollment(subjectId, subject.enrolled - 1);
 
       ref.invalidate(studentEnrollmentsProvider);
       ref.invalidate(enrolledSubjectsProvider);
@@ -138,7 +147,7 @@ class EnrollmentActions extends _$EnrollmentActions {
       ref.invalidate(majorSubjectsProvider);
       ref.invalidate(minorSubjectsProvider);
 
-      return AppConstants.dropSuccess;
+      return 'Drop request submitted - pending admin approval';
     } catch (e) {
       return 'An error occurred';
     }

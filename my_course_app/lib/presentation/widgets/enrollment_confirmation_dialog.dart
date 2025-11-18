@@ -31,12 +31,12 @@ class EnrollmentConfirmationDialog extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: const Color(0xFF1565C0).withValues(alpha: 0.1),
+                color: const Color(0xFF1B5E20).withValues(alpha: 0.1),
                 shape: BoxShape.circle,
               ),
               child: const Icon(
                 Icons.assignment_turned_in_outlined,
-                color: Color(0xFF1565C0),
+                color: Color(0xFF1B5E20),
                 size: 48,
               ),
             ),
@@ -84,13 +84,13 @@ class EnrollmentConfirmationDialog extends StatelessWidget {
                       vertical: 4,
                     ),
                     decoration: BoxDecoration(
-                      color: const Color(0xFF1565C0).withValues(alpha: 0.1),
+                      color: const Color(0xFF1B5E20).withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(6),
                     ),
                     child: Text(
                       subject.code,
                       style: const TextStyle(
-                        color: Color(0xFF1565C0),
+                        color: Color(0xFF1B5E20),
                         fontWeight: FontWeight.bold,
                         fontSize: 12,
                       ),
@@ -164,12 +164,12 @@ class EnrollmentConfirmationDialog extends StatelessWidget {
               decoration: BoxDecoration(
                 color: newTotal > 24
                     ? Colors.green[50]
-                    : const Color(0xFF1565C0).withValues(alpha: 0.1),
+                    : const Color(0xFF1B5E20).withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(8),
                 border: Border.all(
                   color: newTotal > 24
                       ? Colors.green[300]!
-                      : const Color(0xFF1565C0).withValues(alpha: 0.3),
+                      : const Color(0xFF1B5E20).withValues(alpha: 0.3),
                 ),
               ),
               child: Row(
@@ -180,7 +180,7 @@ class EnrollmentConfirmationDialog extends StatelessWidget {
                     size: 20,
                     color: newTotal > 24 
                         ? Colors.green[700] 
-                        : const Color(0xFF1565C0),
+                        : const Color(0xFF1B5E20),
                   ),
                   const SizedBox(width: 10),
                   Flexible(
@@ -192,7 +192,7 @@ class EnrollmentConfirmationDialog extends StatelessWidget {
                         fontWeight: FontWeight.w600,
                         color: newTotal > 24 
                             ? Colors.green[700] 
-                            : const Color(0xFF1565C0),
+                            : const Color(0xFF1B5E20),
                       ),
                     ),
                   ),
@@ -235,7 +235,7 @@ class EnrollmentConfirmationDialog extends StatelessWidget {
                     onPressed: () => Navigator.pop(context, true),
                     style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(vertical: 14),
-                      backgroundColor: const Color(0xFF1565C0),
+                      backgroundColor: const Color(0xFF1B5E20),
                       foregroundColor: Colors.white,
                       elevation: 0,
                       shape: RoundedRectangleBorder(

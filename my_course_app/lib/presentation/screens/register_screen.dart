@@ -31,9 +31,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
   int? _selectedYear;
   
   final List<String> _courses = [
-    'BSIT',
-    'BSCS',
-    'BSGD-Game Development',
+    'BSIT - Bachelor of Science in Information Technology',
+    'BSCS - Bachelor of Science in Computer Science',
+    'BSIS - Bachelor of Science in Information Systems',
+    'ACT - Associate in Computer Technology',
   ];
   
   final List<int> _years = [1, 2, 3, 4];
@@ -53,10 +54,35 @@ class _RegisterScreenState extends State<RegisterScreen> {
     if (value == null || value.isEmpty) {
       return 'Email is required';
     }
-    final emailRegex = RegExp(r'^[\w\-\.]+@([\w\-]+\.)+[\w\-]{2,4}$');
-    if (!emailRegex.hasMatch(value)) {
-      return 'Enter a valid email address';
+    // Only accept @usjr.edu.ph email addresses
+    if (!value.toLowerCase().endsWith('@usjr.edu.ph')) {
+      return 'Please use your USJ-R email (@usjr.edu.ph)';
     }
+    // Validate email format
+    final emailRegex = RegExp(r'^[\w\-\.]+@usjr\.edu\.ph$');
+    if (!emailRegex.hasMatch(value.toLowerCase())) {
+      return 'Enter a valid USJ-R email address';
+    }
+    return null;
+  }
+
+  String? _validateAccountID(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Account ID is required';
+    }
+    // Remove any spaces or dashes
+    final cleanValue = value.replaceAll(RegExp(r'[\s\-]'), '');
+    
+    // Check if it's exactly 10 digits
+    if (cleanValue.length != 10) {
+      return 'Account ID must be exactly 10 digits';
+    }
+    
+    // Check if it contains only numbers
+    if (!RegExp(r'^[0-9]{10}$').hasMatch(cleanValue)) {
+      return 'Account ID must contain only numbers';
+    }
+    
     return null;
   }
 
@@ -154,6 +180,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         lastName: _lastNameController.text.trim(),
         accountID: _accountIDController.text.trim(),
         hashedPassword: passwordHash,
+        email: _emailController.text.trim(),
         course: _selectedCourse,
         year: _selectedYear,
       );
@@ -196,7 +223,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('✅ Registration Successful! Total users: $userCount'),
+            content: Text('✅ Registration Successful!'),
             backgroundColor: Colors.green,
             duration: const Duration(seconds: 3),
             action: SnackBarAction(
@@ -438,6 +465,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   controller: _emailController,
                   decoration: InputDecoration(
                     labelText: 'Email Address',
+                    hintText: 'yourname@usjr.edu.ph',
+                    helperText: 'Use your official USJ-R email address',
                     prefixIcon: const Icon(Icons.email_outlined, color: AppColors.primaryBlue),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
@@ -464,6 +493,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   controller: _accountIDController,
                   decoration: InputDecoration(
                     labelText: 'Account ID / Student ID',
+                    hintText: '10-digit student ID',
+                    helperText: 'Enter your 10-digit student ID number',
                     prefixIcon: const Icon(Icons.badge_outlined, color: AppColors.primaryBlue),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
@@ -479,8 +510,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     filled: true,
                     fillColor: AppColors.white,
                   ),
+                  keyboardType: TextInputType.number,
+                  maxLength: 10,
                   textInputAction: TextInputAction.next,
-                  validator: (value) => _validateNotEmpty(value, 'Account ID'),
+                  validator: _validateAccountID,
                 ),
                 const SizedBox(height: 16),
 
@@ -507,7 +540,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   items: _courses.map((course) {
                     return DropdownMenuItem(
                       value: course,
-                      child: Text(course),
+                      child: Text(
+                        course,
+                        style: const TextStyle(fontSize: 13),
+                        overflow: TextOverflow.ellipsis,
+                      ),
                     );
                   }).toList(),
                   onChanged: (value) {

@@ -28,7 +28,7 @@ class DropConfirmationDialog extends StatelessWidget {
           const SizedBox(width: 12),
           const Expanded(
             child: Text(
-              'Drop Subject?',
+              'Drop Course?',
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 20,
@@ -115,7 +115,7 @@ class DropConfirmationDialog extends StatelessWidget {
             ),
           ),
           child: const Text(
-            'Drop Subject',
+            'Drop Course',
             style: TextStyle(fontWeight: FontWeight.bold),
           ),
         ),

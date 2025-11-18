@@ -92,7 +92,7 @@ class EnrollmentStatusCard extends StatelessWidget {
               ),
               const SizedBox(width: 8),
               Text(
-                '$enrolledCount ${enrolledCount == 1 ? 'Subject' : 'Subjects'} Enrolled',
+                '$enrolledCount ${enrolledCount == 1 ? 'Courses' : 'Courses'} Enrolled',
                 style: const TextStyle(
                   color: Colors.white,
                   fontSize: 15,
@@ -162,7 +162,7 @@ class EnrollmentStatusCard extends StatelessWidget {
                 Expanded(
                   child: Text(
                     isAtLimit
-                        ? 'Unit limit reached! Drop a subject to add more.'
+                        ? 'Unit limit reached! Drop a course to add more.'
                         : isNearLimit
                             ? 'Only $remainingUnits units remaining'
                             : '$remainingUnits units remaining',

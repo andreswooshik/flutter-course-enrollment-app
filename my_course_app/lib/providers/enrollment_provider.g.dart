@@ -103,11 +103,13 @@ const enrolledSubjectsProvider = EnrolledSubjectsProvider._();
 final class EnrolledSubjectsProvider
     extends
         $FunctionalProvider<
-          AsyncValue<List<Subject>>,
-          List<Subject>,
-          FutureOr<List<Subject>>
+          AsyncValue<List<EnrolledSubject>>,
+          List<EnrolledSubject>,
+          FutureOr<List<EnrolledSubject>>
         >
-    with $FutureModifier<List<Subject>>, $FutureProvider<List<Subject>> {
+    with
+        $FutureModifier<List<EnrolledSubject>>,
+        $FutureProvider<List<EnrolledSubject>> {
   const EnrolledSubjectsProvider._()
     : super(
         from: null,
@@ -124,17 +126,17 @@ final class EnrolledSubjectsProvider
 
   @$internal
   @override
-  $FutureProviderElement<List<Subject>> $createElement(
+  $FutureProviderElement<List<EnrolledSubject>> $createElement(
     $ProviderPointer pointer,
   ) => $FutureProviderElement(pointer);
 
   @override
-  FutureOr<List<Subject>> create(Ref ref) {
+  FutureOr<List<EnrolledSubject>> create(Ref ref) {
     return enrolledSubjects(ref);
   }
 }
 
-String _$enrolledSubjectsHash() => r'8805adcae877e2299089d169bfc024e8165e4193';
+String _$enrolledSubjectsHash() => r'97178989d90526701472b69c533a14ac097558ca';
 
 @ProviderFor(totalEnrolledUnits)
 const totalEnrolledUnitsProvider = TotalEnrolledUnitsProvider._();
@@ -168,7 +170,7 @@ final class TotalEnrolledUnitsProvider
 }
 
 String _$totalEnrolledUnitsHash() =>
-    r'016cf5a12f98bb4e7ace40eae0aba67b0faa4b84';
+    r'1923ae039af498b246fbfec412f85c46f1533811';
 
 @ProviderFor(EnrollmentActions)
 const enrollmentActionsProvider = EnrollmentActionsProvider._();
@@ -194,7 +196,7 @@ final class EnrollmentActionsProvider
   EnrollmentActions create() => EnrollmentActions();
 }
 
-String _$enrollmentActionsHash() => r'76884a2f55c6108058427ff92ad454acbfab5ef9';
+String _$enrollmentActionsHash() => r'149e737f01d2a933623f3e48169550eca9738683';
 
 abstract class _$EnrollmentActions extends $AsyncNotifier<void> {
   FutureOr<void> build();
