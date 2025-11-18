@@ -3,12 +3,17 @@ import 'package:flutter/material.dart';
 class AppColors {
   AppColors._();
 
-  // USJR Brand Colors
-  static const primaryBlue = Color(0xFF003DA5);
-  static const accentGold = Color(0xFFFFB81C);
-  static const darkBlue = Color(0xFF002855);
-  static const lightBlue = Color(0xFF4A90E2);
-  static const backgroundGray = Color(0xFFF8F9FA);
+  // USJ-R Official Brand Colors - Green and Gold
+  static const primaryGreen = Color(0xFF1B5E20);      // Deep Green (Primary)
+  static const accentGold = Color(0xFFFFD700);        // Gold (Accent)
+  static const darkGreen = Color(0xFF0D3D0F);         // Dark Green
+  static const lightGreen = Color(0xFF4CAF50);        // Light Green
+  static const backgroundGray = Color(0xFFF8F9FA);    // Light Background
+  
+  // Legacy aliases for backward compatibility (map to green)
+  static const primaryBlue = primaryGreen;
+  static const darkBlue = darkGreen;
+  static const lightBlue = lightGreen;
   
   // Semantic Colors
   static const success = Color(0xFF4CAF50);

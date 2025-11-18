@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 // Domain
 import '../../domain/models/subject.dart';
+import '../../domain/models/enrolled_subject.dart';
 
 // Providers
 import '../../providers/enrollment_provider.dart';
@@ -29,7 +30,7 @@ class _MySubjectsScreenState extends ConsumerState<MySubjectsScreen> {
 
     return Scaffold(
       appBar: const CustomAppBar(
-        title: 'My Subjects',
+        title: 'My Courses',
         showBackButton: true,
       ),
       body: Column(
@@ -43,7 +44,7 @@ class _MySubjectsScreenState extends ConsumerState<MySubjectsScreen> {
                     width: double.infinity,
                     padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
-                      color: const Color(0xFF1565C0).withValues(alpha: 0.1),
+                      color: const Color(0xFF1B5E20).withValues(alpha: 0.1),
                       border: Border(
                         bottom: BorderSide(color: Colors.grey[300]!),
                       ),
@@ -53,22 +54,22 @@ class _MySubjectsScreenState extends ConsumerState<MySubjectsScreen> {
                       children: [
                         Icon(
                           Icons.school,
-                          color: const Color(0xFF1565C0),
+                          color: const Color(0xFF1B5E20),
                           size: 20,
                         ),
                         const SizedBox(width: 8),
                         Text(
-                          '${enrolledSubjects.length} ${enrolledSubjects.length == 1 ? 'Subject' : 'Subjects'}',
+                          '${enrolledSubjects.length} ${enrolledSubjects.length == 1 ? 'Course' : 'Courses'}',
                           style: const TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
-                            color: Color(0xFF1565C0),
+                            color: Color(0xFF1B5E20),
                           ),
                         ),
                         const SizedBox(width: 16),
                         Icon(
                           Icons.assessment,
-                          color: const Color(0xFF1565C0),
+                          color: const Color(0xFF1B5E20),
                           size: 20,
                         ),
                         const SizedBox(width: 8),
@@ -77,7 +78,7 @@ class _MySubjectsScreenState extends ConsumerState<MySubjectsScreen> {
                           style: const TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
-                            color: Color(0xFF1565C0),
+                            color: Color(0xFF1B5E20),
                           ),
                         ),
                       ],
@@ -106,11 +107,13 @@ class _MySubjectsScreenState extends ConsumerState<MySubjectsScreen> {
                       padding: const EdgeInsets.all(16),
                       itemCount: enrolledSubjects.length,
                       itemBuilder: (context, index) {
-                        final subject = enrolledSubjects[index];
+                        final enrolledSubject = enrolledSubjects[index];
+                        final subject = enrolledSubject.subject;
                         final isDropping = _droppingSubjectId == subject.id;
 
                         return EnrolledSubjectCard(
                           subject: subject,
+                          enrollmentStatus: enrolledSubject.status,
                           isDropping: isDropping,
                           onDrop: () => _handleDrop(subject, totalUnits),
                         );
@@ -188,7 +191,7 @@ class _MySubjectsScreenState extends ConsumerState<MySubjectsScreen> {
             ),
             const SizedBox(height: 24),
             const Text(
-              'No Subjects Enrolled',
+              'No Courses Enrolled',
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
@@ -196,7 +199,7 @@ class _MySubjectsScreenState extends ConsumerState<MySubjectsScreen> {
             ),
             const SizedBox(height: 12),
             Text(
-              'You haven\'t enrolled in any subjects yet.\nStart by browsing available subjects!',
+              'You haven\'t enrolled in any courses yet.\nStart by browsing available courses!',
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 15,
@@ -210,9 +213,9 @@ class _MySubjectsScreenState extends ConsumerState<MySubjectsScreen> {
                 Navigator.pushReplacementNamed(context, '/subject-list');
               },
               icon: const Icon(Icons.add_circle_outline),
-              label: const Text('Browse Subjects'),
+              label: const Text('Browse Courses'),
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF1565C0),
+                backgroundColor: const Color(0xFF1B5E20),
                 foregroundColor: Colors.white,
                 padding: const EdgeInsets.symmetric(
                   horizontal: 32,
@@ -230,6 +233,8 @@ class _MySubjectsScreenState extends ConsumerState<MySubjectsScreen> {
   }
 
   Future<void> _handleDrop(Subject subject, int currentUnits) async {
+    print('🔵 Drop button pressed for: ${subject.code}');
+    
     // Show confirmation dialog
     final confirmed = await showDialog<bool>(
       context: context,
@@ -242,23 +247,39 @@ class _MySubjectsScreenState extends ConsumerState<MySubjectsScreen> {
       ),
     );
 
+    print('🔵 Dialog result: $confirmed');
+    
     // If user didn't confirm, return
-    if (confirmed != true) return;
+    if (confirmed != true) {
+      print('🔵 User cancelled drop');
+      return;
+    }
 
+    print('🔵 User confirmed, starting drop process');
+    
     // User confirmed, proceed with dropping
     setState(() {
       _droppingSubjectId = subject.id;
     });
 
     try {
+      print('🔵 Calling dropSubject...');
+      final result = await ref.read(enrollmentActionsProvider.notifier).dropSubject(subject.id);
+      print('🔵 Drop result: $result');
+
+      setState(() {
+        _droppingSubjectId = null;
+      });
+
       if (mounted) {
+        print('🔵 Showing snackbar');
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Row(
               children: [
                 Icon(Icons.hourglass_top, color: Colors.white),
                 const SizedBox(width: 12),
-                const Expanded(child: Text('Waiting for admin approval')),
+                Expanded(child: Text(result)),
               ],
             ),
             backgroundColor: Colors.orange[700],
@@ -269,14 +290,10 @@ class _MySubjectsScreenState extends ConsumerState<MySubjectsScreen> {
             duration: const Duration(seconds: 3),
           ),
         );
+        print('🔵 Drop process complete, staying on screen');
       }
-
-      await ref.read(enrollmentActionsProvider.notifier).dropSubject(subject.id);
-
-      setState(() {
-        _droppingSubjectId = null;
-      });
     } catch (e) {
+      print('🔴 Error during drop: $e');
       if (!mounted) return;
 
       setState(() {

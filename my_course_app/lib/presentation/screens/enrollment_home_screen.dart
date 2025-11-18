@@ -7,7 +7,7 @@ import '../widgets/bottom_bar.dart';
 import '../widgets/enrollment_status_card.dart';
 import 'subject_list_screen.dart';
 import 'my_subjects_screen.dart';
-import 'profile_screen.dart'; // Import ProfileScreen
+import 'profile_screen.dart';
 
 class EnrollmentHomeScreen extends ConsumerWidget {
   const EnrollmentHomeScreen({super.key});
@@ -76,7 +76,7 @@ class EnrollmentHomeScreen extends ConsumerWidget {
 
                   const SizedBox(height: 24),
 
-                  _buildQuickActions(context, ref),
+                  _buildAcademicInformation(context, ref),
 
                   const SizedBox(height: 100),
                 ],
@@ -86,7 +86,7 @@ class EnrollmentHomeScreen extends ConsumerWidget {
         ),
       ),
       bottomNavigationBar: BottomBar(
-        buttonOneText: "Browse Subjects",
+        buttonOneText: "Browse Courses",
         buttonOneMainColor: true,
         buttonOneFunction: () {
           Navigator.push(
@@ -97,7 +97,7 @@ class EnrollmentHomeScreen extends ConsumerWidget {
           );
         },
         addOneMoreButton: true,
-        buttonTwoText: "My Subjects",
+        buttonTwoText: "My Courses",
         buttonTwoMainColor: false,
         buttonTwoFunction: () {
           Navigator.push(
@@ -111,7 +111,7 @@ class EnrollmentHomeScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildQuickActions(BuildContext context, WidgetRef ref) {
+  Widget _buildAcademicInformation(BuildContext context, WidgetRef ref) {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
@@ -122,43 +122,58 @@ class EnrollmentHomeScreen extends ConsumerWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            'Quick Actions',
-            style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
+          Row(
+            children: [
+              Icon(
+                Icons.school,
+                color: const Color(0xFF1B5E20),
+                size: 24,
+              ),
+              const SizedBox(width: 8),
+              Text(
+                'Academic Information',
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: const Color(0xFF1B5E20),
+                    ),
+              ),
+            ],
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: 16),
           _buildActionTile(
             context,
-            icon: Icons.add_circle_outline,
-            title: 'Enroll in Subjects',
-            subtitle: 'Browse available subjects',
+            icon: Icons.grade,
+            title: 'View Grades',
+            subtitle: 'Check your academic performance',
             onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const SubjectListScreen(),
-                ),
-              );
+              _showComingSoonNotification(context, 'View Grades');
             },
           ),
           const Divider(height: 24),
           _buildActionTile(
             context,
-            icon: Icons.list_alt,
-            title: 'View My Subjects',
-            subtitle: 'See your enrolled subjects',
+            icon: Icons.calendar_month,
+            title: 'Enrollment Schedule',
+            subtitle: 'View important enrollment dates',
             onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const MySubjectsScreen(),
-                ),
-              );
+              _showComingSoonNotification(context, 'Enrollment Schedule');
             },
           ),
         ],
+      ),
+    );
+  }
+
+  void _showComingSoonNotification(BuildContext context, String title) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('$title is coming soon!'),
+        backgroundColor: const Color(0xFF1B5E20),
+        behavior: SnackBarBehavior.floating,
+        margin: const EdgeInsets.all(16),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8),
+        ),
       ),
     );
   }
@@ -180,12 +195,12 @@ class EnrollmentHomeScreen extends ConsumerWidget {
             Container(
               padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
-                color: const Color(0xFF1565C0).withValues(alpha: 0.1),
+                color: const Color(0xFF1B5E20).withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(8),
               ),
-              child: const Icon(
-                Icons.add_circle_outline,
-                color: Color(0xFF1565C0),
+              child: Icon(
+                icon,
+                color: const Color(0xFF1B5E20),
                 size: 24,
               ),
             ),
@@ -239,7 +254,7 @@ class PlaceholderScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(title),
-        backgroundColor: const Color(0xFF1565C0),
+        backgroundColor: const Color(0xFF1B5E20),
         foregroundColor: Colors.white,
       ),
       body: Center(
@@ -279,7 +294,7 @@ class PlaceholderScreen extends StatelessWidget {
                 icon: const Icon(Icons.arrow_back),
                 label: const Text('Go Back'),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF1565C0),
+                  backgroundColor: const Color(0xFF1B5E20),
                   foregroundColor: Colors.white,
                   padding: const EdgeInsets.symmetric(
                     horizontal: 32,

@@ -51,7 +51,7 @@ class _SubjectListScreenState extends ConsumerState<SubjectListScreen>
                 width: double.infinity,
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: const Color(0xFF1565C0).withValues(alpha: 0.1),
+                  color: const Color(0xFF1B5E20).withValues(alpha: 0.1),
                   border: Border(
                     bottom: BorderSide(color: Colors.grey[300]!),
                   ),
@@ -61,7 +61,7 @@ class _SubjectListScreenState extends ConsumerState<SubjectListScreen>
                   children: [
                     Icon(
                       Icons.assessment,
-                      color: const Color(0xFF1565C0),
+                      color: const Color(0xFF1B5E20),
                       size: 20,
                     ),
                     const SizedBox(width: 8),
@@ -70,7 +70,7 @@ class _SubjectListScreenState extends ConsumerState<SubjectListScreen>
                       style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
-                        color: Color(0xFF1565C0),
+                        color: Color(0xFF1B5E20),
                       ),
                     ),
                     const SizedBox(width: 16),
@@ -103,9 +103,9 @@ class _SubjectListScreenState extends ConsumerState<SubjectListScreen>
             ),
             child: TabBar(
               controller: _tabController,
-              labelColor: const Color(0xFF1565C0),
+              labelColor: const Color(0xFF1B5E20),
               unselectedLabelColor: Colors.grey[600],
-              indicatorColor: const Color(0xFF1565C0),
+              indicatorColor: const Color(0xFF1B5E20),
               indicatorWeight: 3,
               tabs: const [
                 Tab(text: '1st Year'),
@@ -119,7 +119,7 @@ class _SubjectListScreenState extends ConsumerState<SubjectListScreen>
           Expanded(
             child: enrolledSubjectsAsync.when(
               data: (enrolledSubjects) {
-                final enrolledIds = enrolledSubjects.map((s) => s.id).toSet();
+                final enrolledIds = enrolledSubjects.map((es) => es.subject.id).toSet();
 
                 return totalUnitsAsync.when(
                   data: (totalUnits) {
@@ -163,29 +163,6 @@ class _SubjectListScreenState extends ConsumerState<SubjectListScreen>
             ),
           ),
         ],
-      ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () async {
-          final service = ref.read(subjectStorageServiceProvider);
-          await service.initializeSubjects();
-          
-          // Force refresh
-          ref.invalidate(firstYearSubjectsProvider);
-          ref.invalidate(majorSubjectsProvider);
-          ref.invalidate(minorSubjectsProvider);
-          
-          if (mounted) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('✅ Subjects loaded!'),
-                backgroundColor: Colors.green,
-              ),
-            );
-          }
-        },
-        backgroundColor: const Color(0xFF1565C0),
-        icon: const Icon(Icons.refresh),
-        label: const Text('Load Subjects'),
       ),
     );
   }

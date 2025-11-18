@@ -30,7 +30,7 @@ class SubjectCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(12),
         side: BorderSide(
           color: isEnrolled 
-              ? const Color(0xFF1565C0)
+              ? const Color(0xFF1B5E20)
               : Colors.grey[200]!,
           width: isEnrolled ? 2 : 1,
         ),
@@ -51,13 +51,13 @@ class SubjectCard extends StatelessWidget {
                     vertical: 6,
                   ),
                   decoration: BoxDecoration(
-                    color: const Color(0xFF1565C0).withValues(alpha: 0.1),
+                    color: const Color(0xFF1B5E20).withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(6),
                   ),
                   child: Text(
                     subject.code,
                     style: const TextStyle(
-                      color: Color(0xFF1565C0),
+                      color: Color(0xFF1B5E20),
                       fontWeight: FontWeight.bold,
                       fontSize: 13,
                     ),
@@ -291,7 +291,7 @@ class SubjectCard extends StatelessWidget {
           ),
         ),
         style: ElevatedButton.styleFrom(
-          backgroundColor: const Color(0xFF1565C0),
+          backgroundColor: const Color(0xFF1B5E20),
           foregroundColor: Colors.white,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(8),

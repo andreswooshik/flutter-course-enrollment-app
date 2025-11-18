@@ -75,7 +75,7 @@ class BottomBar extends StatelessWidget {
         onPressed: onPressed,
         style: ElevatedButton.styleFrom(
           backgroundColor: isMainColor
-              ? const Color(0xFF1565C0)
+              ? const Color(0xFF1B5E20)
               : Colors.grey[300],
           foregroundColor: isMainColor ? Colors.white : Colors.black87,
           elevation: isMainColor ? 2 : 0,
