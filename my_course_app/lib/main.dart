@@ -28,18 +28,18 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primarySwatch: Colors.green,
-        primaryColor: const Color(0xFF1B5E20),  // USJ-R Green
+        primaryColor: const Color(0xFF1B5E20),  
         colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color(0xFF1B5E20),  // USJ-R Green
-          primary: const Color(0xFF1B5E20),    // USJ-R Green
-          secondary: const Color(0xFFFFD700),  // USJ-R Gold
+          seedColor: const Color(0xFF1B5E20), 
+          primary: const Color(0xFF1B5E20),    
+          secondary: const Color(0xFFFFD700),  
         ),
         useMaterial3: true,
-        // Typography with Google Fonts
+        
         textTheme: GoogleFonts.poppinsTextTheme(
           ThemeData.light().textTheme,
         ).copyWith(
-          // Headings
+    
           displayLarge: GoogleFonts.poppins(
             fontSize: 32,
             fontWeight: FontWeight.bold,
@@ -55,7 +55,7 @@ class MyApp extends StatelessWidget {
             fontWeight: FontWeight.w600,
             color: const Color(0xFF1B5E20),
           ),
-          // Titles
+      
           titleLarge: GoogleFonts.poppins(
             fontSize: 20,
             fontWeight: FontWeight.w600,
@@ -68,7 +68,7 @@ class MyApp extends StatelessWidget {
             fontSize: 16,
             fontWeight: FontWeight.w500,
           ),
-          // Body text
+    
           bodyLarge: GoogleFonts.inter(
             fontSize: 16,
             fontWeight: FontWeight.normal,
@@ -81,13 +81,13 @@ class MyApp extends StatelessWidget {
             fontSize: 12,
             fontWeight: FontWeight.normal,
           ),
-          // Labels
+    
           labelLarge: GoogleFonts.poppins(
             fontSize: 14,
             fontWeight: FontWeight.w500,
           ),
         ),
-        // AppBar theme
+
         appBarTheme: AppBarTheme(
           titleTextStyle: GoogleFonts.poppins(
             fontSize: 20,
@@ -97,7 +97,7 @@ class MyApp extends StatelessWidget {
         ),
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ElevatedButton.styleFrom(
-            backgroundColor: const Color(0xFF1B5E20),  // USJ-R Green
+            backgroundColor: const Color(0xFF1B5E20), 
             foregroundColor: Colors.white,
             textStyle: GoogleFonts.poppins(
               fontSize: 16,

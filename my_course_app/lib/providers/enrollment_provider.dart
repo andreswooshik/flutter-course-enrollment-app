@@ -38,7 +38,6 @@ Future<List<EnrolledSubject>> enrolledSubjects(Ref ref) async {
 @riverpod
 Future<int> totalEnrolledUnits(Ref ref) async { 
   final enrolledSubjects = await ref.watch(enrolledSubjectsProvider.future);
-  // Only count units for subjects that are fully enrolled (not pending drop)
   return enrolledSubjects
       .where((es) => es.status == 'enrolled')
       .fold<int>(0, (sum, es) => sum + es.subject.units);
@@ -47,8 +46,6 @@ Future<int> totalEnrolledUnits(Ref ref) async {
 class EnrollmentActions extends _$EnrollmentActions {
   @override
   void build() {
-    // No async initialization needed here
-    // Subjects are already initialized in main.dart
   }
   Future<String> enrollInSubject(String subjectId) async {
     try {
@@ -105,13 +102,10 @@ class EnrollmentActions extends _$EnrollmentActions {
       if (subject == null) {
         return 'Subject not found';
       }
-      // Update status to 'pending_drop' instead of removing
       final success = await enrollmentService.updateEnrollmentStatus(studentId, subjectId, 'pending_drop');
       if (!success) {
         return 'Failed to drop subject';
       }
-      // Don't decrease enrolled count yet - wait for admin approval
-      // await subjectService.updateSubjectEnrollment(subjectId, subject.enrolled - 1);
       ref.invalidate(studentEnrollmentsProvider);
       ref.invalidate(enrolledSubjectsProvider);
       ref.invalidate(totalEnrolledUnitsProvider);

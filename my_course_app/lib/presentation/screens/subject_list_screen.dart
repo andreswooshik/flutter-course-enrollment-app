@@ -239,10 +239,9 @@ class _SubjectListScreenState extends ConsumerState<SubjectListScreen>
     );
   }
   Future<void> _handleEnroll(Subject subject) async {
-    // Get current units
+    final enrollmentActions = ref.read(enrollmentActionsProvider.notifier);
     final totalUnits = await ref.read(totalEnrolledUnitsProvider.future);
     final remainingUnits = 24 - totalUnits;
-    // Show confirmation dialog
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => EnrollmentConfirmationDialog(
@@ -251,21 +250,16 @@ class _SubjectListScreenState extends ConsumerState<SubjectListScreen>
         remainingUnits: remainingUnits,
       ),
     );
-    // If user didn't confirm, return
     if (confirmed != true || !mounted) return;
-    // User confirmed, proceed with enrollment
     setState(() {
       _enrollingSubjectId = subject.id;
     });
     try {
-      // Read the provider before the async operation
-      final enrollmentActions = ref.read(enrollmentActionsProvider.notifier);
       final result = await enrollmentActions.enrollInSubject(subject.id);
       if (!mounted) return;
       setState(() {
         _enrollingSubjectId = null;
       });
-      // Show result message
       final isSuccess = result.toLowerCase().contains('success');
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
