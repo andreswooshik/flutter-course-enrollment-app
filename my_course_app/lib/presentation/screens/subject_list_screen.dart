@@ -238,10 +238,10 @@ class _SubjectListScreenState extends ConsumerState<SubjectListScreen>
       ),
     );
   }
-  Future<void> _handleEnroll(Subject subject) async {
-    final enrollmentActions = ref.read(enrollmentActionsProvider.notifier);
+    Future<void> _handleEnroll(Subject subject) async {
     final totalUnits = await ref.read(totalEnrolledUnitsProvider.future);
     final remainingUnits = 24 - totalUnits;
+    
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => EnrollmentConfirmationDialog(
@@ -250,17 +250,33 @@ class _SubjectListScreenState extends ConsumerState<SubjectListScreen>
         remainingUnits: remainingUnits,
       ),
     );
+    
     if (confirmed != true || !mounted) return;
+    
     setState(() {
       _enrollingSubjectId = subject.id;
     });
+    
     try {
-      final result = await enrollmentActions.enrollInSubject(subject.id);
+      final result = await ref.read(enrollInSubjectProvider(subject.id).future);
       if (!mounted) return;
+      
+      final isSuccess = result.toLowerCase().contains('success');
+      
+      // Refresh data after successful enrollment
+      if (isSuccess) {
+        ref.invalidate(studentEnrollmentsProvider);
+        ref.invalidate(enrolledSubjectsProvider);
+        ref.invalidate(totalEnrolledUnitsProvider);
+        ref.invalidate(firstYearSubjectsProvider);
+        ref.invalidate(majorSubjectsProvider);
+        ref.invalidate(minorSubjectsProvider);
+      }
+      
       setState(() {
         _enrollingSubjectId = null;
       });
-      final isSuccess = result.toLowerCase().contains('success');
+      
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Row(

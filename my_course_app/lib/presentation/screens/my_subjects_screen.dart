@@ -220,7 +220,6 @@ class _MySubjectsScreenState extends ConsumerState<MySubjectsScreen> {
   }
   Future<void> _handleDrop(Subject subject, int currentUnits) async {
     print('🔵 Drop button pressed for: ${subject.code}');
-    final enrollmentActions = ref.read(enrollmentActionsProvider.notifier);
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => DropConfirmationDialog(
@@ -242,7 +241,7 @@ class _MySubjectsScreenState extends ConsumerState<MySubjectsScreen> {
     });
     try {
       print('🔵 Calling dropSubject...');
-      final result = await enrollmentActions.dropSubject(subject.id);
+      final result = await ref.read(dropSubjectProvider(subject.id).future);
       print('🔵 Drop result: ${result}');
       if (!mounted) return;
       setState(() {

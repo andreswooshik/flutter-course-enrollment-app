@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../domain/models/enrollment.dart';
 import '../domain/models/subject.dart';
@@ -42,79 +43,77 @@ Future<int> totalEnrolledUnits(Ref ref) async {
       .where((es) => es.status == 'enrolled')
       .fold<int>(0, (sum, es) => sum + es.subject.units);
 }
+
 @riverpod
-class EnrollmentActions extends _$EnrollmentActions {
-  @override
-  void build() {
-  }
-  Future<String> enrollInSubject(String subjectId) async {
-    try {
-      final authRepo = ref.read(authRepositoryProvider);
-      final studentId = await authRepo.getCurrentUserId();
-      if (studentId == null) {
-        return 'Not logged in';
-      }
-      final enrollmentService = ref.read(enrollmentStorageServiceProvider);
-      final subjectService = ref.read(subjectStorageServiceProvider);
-      final isAlreadyEnrolled = await enrollmentService.isEnrolled(studentId, subjectId);
-      if (isAlreadyEnrolled) {
-        return AppConstants.alreadyEnrolled;
-      }
-      final subject = await subjectService.getSubjectById(subjectId);
-      if (subject == null) {
-        return 'Subject not found';
-      }
-      if (subject.isFull) {
-        return AppConstants.subjectFull;
-      }
-      final currentUnits = await ref.read(totalEnrolledUnitsProvider.future);
-      final afterEnrollment = currentUnits + subject.units;
-      if (afterEnrollment > AppConstants.maxUnitsPerSemester) {
-        return AppConstants.unitLimitExceeded;
-      }
-      final success = await enrollmentService.addEnrollment(studentId, subjectId);
-      if (!success) {
-        return 'Failed to enroll';
-      }
-      await subjectService.updateSubjectEnrollment(subjectId, subject.enrolled + 1);
-      ref.invalidate(studentEnrollmentsProvider);
-      ref.invalidate(enrolledSubjectsProvider);
-      ref.invalidate(totalEnrolledUnitsProvider);
-      ref.invalidate(firstYearSubjectsProvider);
-      ref.invalidate(majorSubjectsProvider);
-      ref.invalidate(minorSubjectsProvider);
-      return AppConstants.enrollSuccess;
-    } catch (e) {
-      print('❌ Enrollment error: $e');
-      return 'An error occurred: $e';
+Future<String> enrollInSubject(Ref ref, String subjectId) async {
+  try {
+    final authRepo = ref.read(authRepositoryProvider);
+    final studentId = await authRepo.getCurrentUserId();
+    if (studentId == null) {
+      return 'Not logged in';
     }
-  }
-  Future<String> dropSubject(String subjectId) async {
-    try {
-      final authRepo = ref.read(authRepositoryProvider);
-      final studentId = await authRepo.getCurrentUserId();
-      if (studentId == null) {
-        return 'Not logged in';
-      }
-      final enrollmentService = ref.read(enrollmentStorageServiceProvider);
-      final subjectService = ref.read(subjectStorageServiceProvider);
-      final subject = await subjectService.getSubjectById(subjectId);
-      if (subject == null) {
-        return 'Subject not found';
-      }
-      final success = await enrollmentService.updateEnrollmentStatus(studentId, subjectId, 'pending_drop');
-      if (!success) {
-        return 'Failed to drop subject';
-      }
-      ref.invalidate(studentEnrollmentsProvider);
-      ref.invalidate(enrolledSubjectsProvider);
-      ref.invalidate(totalEnrolledUnitsProvider);
-      ref.invalidate(firstYearSubjectsProvider);
-      ref.invalidate(majorSubjectsProvider);
-      ref.invalidate(minorSubjectsProvider);
-      return 'Drop request submitted - pending admin approval';
-    } catch (e) {
-      return 'An error occurred';
+
+    final enrollmentService = ref.read(enrollmentStorageServiceProvider);
+    final subjectService = ref.read(subjectStorageServiceProvider);
+
+    final isAlreadyEnrolled = await enrollmentService.isEnrolled(studentId, subjectId);
+    if (isAlreadyEnrolled) {
+      return AppConstants.alreadyEnrolled;
     }
+
+    final subject = await subjectService.getSubjectById(subjectId);
+    if (subject == null) {
+      return 'Subject not found';
+    }
+
+    if (subject.isFull) {
+      return AppConstants.subjectFull;
+    }
+
+    final currentUnits = await ref.read(totalEnrolledUnitsProvider.future);
+    final afterEnrollment = currentUnits + subject.units;
+    if (afterEnrollment > AppConstants.maxUnitsPerSemester) {
+      return AppConstants.unitLimitExceeded;
+    }
+
+    final success = await enrollmentService.addEnrollment(studentId, subjectId);
+    if (!success) {
+      return 'Failed to enroll';
+    }
+
+    await subjectService.updateSubjectEnrollment(subjectId, subject.enrolled + 1);
+    
+    return AppConstants.enrollSuccess;
+  } catch (e) {
+    print('❌ Enrollment error: $e');
+    return 'An error occurred: $e';
+  }
+}
+
+@riverpod
+Future<String> dropSubject(Ref ref, String subjectId) async {
+  try {
+    final authRepo = ref.read(authRepositoryProvider);
+    final studentId = await authRepo.getCurrentUserId();
+    if (studentId == null) {
+      return 'Not logged in';
+    }
+
+    final enrollmentService = ref.read(enrollmentStorageServiceProvider);
+    final subjectService = ref.read(subjectStorageServiceProvider);
+
+    final subject = await subjectService.getSubjectById(subjectId);
+    if (subject == null) {
+      return 'Subject not found';
+    }
+
+    final success = await enrollmentService.updateEnrollmentStatus(studentId, subjectId, 'pending_drop');
+    if (!success) {
+      return 'Failed to drop subject';
+    }
+    
+    return 'Drop request submitted - pending admin approval';
+  } catch (e) {
+    return 'An error occurred';
   }
 }

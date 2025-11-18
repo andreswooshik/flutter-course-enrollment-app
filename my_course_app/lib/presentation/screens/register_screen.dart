@@ -387,7 +387,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   textInputAction: TextInputAction.next,
                   validator: (value) => _validateNotEmpty(value, 'First name'),
                 ),
-                const SizedBox(height: 12),
+                const SizedBox(height: 8),
                 TextFormField(
                   controller: _lastNameController,
                   decoration: InputDecoration(
@@ -410,7 +410,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   textInputAction: TextInputAction.next,
                   validator: (value) => _validateNotEmpty(value, 'Last name'),
                 ),
-                const SizedBox(height: 12),
+                const SizedBox(height: 8),
                 TextFormField(
                   controller: _emailController,
                   decoration: InputDecoration(
@@ -436,7 +436,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   textInputAction: TextInputAction.next,
                   validator: _validateEmail,
                 ),
-                const SizedBox(height: 12),
+                const SizedBox(height: 8),
                 TextFormField(
                   controller: _accountIDController,
                   decoration: InputDecoration(
@@ -464,9 +464,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   textInputAction: TextInputAction.next,
                   validator: _validateAccountID,
                 ),
-                const SizedBox(height: 12),
+                const SizedBox(height: 8),
                 DropdownButtonFormField<String>(
                   value: _selectedCourse,
+                  isDense: true,
                   decoration: InputDecoration(
                     labelText: 'Course',
                     prefixIcon: const Icon(Icons.school_outlined, color: AppColors.primaryBlue),
@@ -489,7 +490,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       value: course,
                       child: Text(
                         course,
-                        style: const TextStyle(fontSize: 12),
+                        style: const TextStyle(fontSize: 11),
                         overflow: TextOverflow.ellipsis,
                         maxLines: 1,
                       ),
@@ -507,9 +508,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     return null;
                   },
                 ),
-                const SizedBox(height: 12),
+                const SizedBox(height: 8),
                 DropdownButtonFormField<int>(
                   value: _selectedYear,
+                  isDense: true,
                   decoration: InputDecoration(
                     labelText: 'Year Level',
                     prefixIcon: const Icon(Icons.calendar_today_outlined, color: AppColors.primaryBlue),
@@ -545,7 +547,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     return null;
                   },
                 ),
-                const SizedBox(height: 12),
+                const SizedBox(height: 8),
                 TextFormField(
                   controller: _passwordController,
                   decoration: InputDecoration(
@@ -600,7 +602,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       ),
                     ],
                   ),
-                const SizedBox(height: 12),
+                const SizedBox(height: 8),
                 TextFormField(
                   controller: _confirmPasswordController,
                   decoration: InputDecoration(
@@ -704,6 +706,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     ),
                   ],
                 ),
+                const SizedBox(height: 100),
               ],
             ),
           ),

@@ -2,7 +2,7 @@
 class AppStrings {
   AppStrings._();
   // App Info
-  static const appTitle = 'USJR Course\nEnrollment App';
+  static const appTitle = 'USJ-R Course\nEnrollment App';
   static const appMotto = 'Caritas et Scientia';
   // Login Screen
   static const loginTitle = 'Welcome Back!';
