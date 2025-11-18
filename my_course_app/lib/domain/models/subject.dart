@@ -10,7 +10,6 @@ class Subject {
   final int capacity;
   final int enrolled;
   final SubjectType type; // Major or Minor
-
   Subject({
     required this.id,
     required this.code,
@@ -23,13 +22,10 @@ class Subject {
     this.enrolled = 0,
     required this.type,
   });
-
   /// Check if subject is full
   bool get isFull => enrolled >= capacity;
-
   /// Get available slots
   int get availableSlots => capacity - enrolled;
-
   /// Convert to JSON for storage
   Map<String, dynamic> toJson() {
     return {
@@ -45,7 +41,6 @@ class Subject {
       'type': type.name,
     };
   }
-
   /// Create from JSON
   factory Subject.fromJson(Map<String, dynamic> json) {
     return Subject(
@@ -64,7 +59,6 @@ class Subject {
       ),
     );
   }
-
   /// Create a copy with updated fields
   Subject copyWith({
     String? id,
@@ -91,17 +85,14 @@ class Subject {
       type: type ?? this.type,
     );
   }
-
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
     return other is Subject && other.id == id;
   }
-
   @override
   int get hashCode => id.hashCode;
 }
-
 enum SubjectType {
   major,  
   minor,  

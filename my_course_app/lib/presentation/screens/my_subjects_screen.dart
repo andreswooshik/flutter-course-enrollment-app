@@ -1,33 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 // Domain
 import '../../domain/models/subject.dart';
 import '../../domain/models/enrolled_subject.dart';
-
 // Providers
 import '../../providers/enrollment_provider.dart';
-
 // Widgets
 import '../widgets/custom_app_bar.dart';
 import '../widgets/enrolled_subject_card.dart';
 import '../widgets/drop_confirmation_dialog.dart';
-
 class MySubjectsScreen extends ConsumerStatefulWidget {
   const MySubjectsScreen({super.key});
-
   @override
   ConsumerState<MySubjectsScreen> createState() => _MySubjectsScreenState();
 }
-
 class _MySubjectsScreenState extends ConsumerState<MySubjectsScreen> {
   String? _droppingSubjectId;
-
   @override
   Widget build(BuildContext context) {
     final enrolledSubjectsAsync = ref.watch(enrolledSubjectsProvider);
     final totalUnitsAsync = ref.watch(totalEnrolledUnitsProvider);
-
     return Scaffold(
       appBar: const CustomAppBar(
         title: 'My Courses',
@@ -92,7 +84,6 @@ class _MySubjectsScreenState extends ConsumerState<MySubjectsScreen> {
             loading: () => const LinearProgressIndicator(),
             error: (_, __) => const SizedBox.shrink(),
           ),
-
           // Subjects List
           Expanded(
             child: enrolledSubjectsAsync.when(
@@ -100,7 +91,6 @@ class _MySubjectsScreenState extends ConsumerState<MySubjectsScreen> {
                 if (enrolledSubjects.isEmpty) {
                   return _buildEmptyState(context);
                 }
-
                 return totalUnitsAsync.when(
                   data: (totalUnits) {
                     return ListView.builder(
@@ -110,7 +100,6 @@ class _MySubjectsScreenState extends ConsumerState<MySubjectsScreen> {
                         final enrolledSubject = enrolledSubjects[index];
                         final subject = enrolledSubject.subject;
                         final isDropping = _droppingSubjectId == subject.id;
-
                         return EnrolledSubjectCard(
                           subject: subject,
                           enrollmentStatus: enrolledSubject.status,
@@ -169,7 +158,6 @@ class _MySubjectsScreenState extends ConsumerState<MySubjectsScreen> {
       ),
     );
   }
-
   Widget _buildEmptyState(BuildContext context) {
     return Center(
       child: Padding(
@@ -231,10 +219,8 @@ class _MySubjectsScreenState extends ConsumerState<MySubjectsScreen> {
       ),
     );
   }
-
   Future<void> _handleDrop(Subject subject, int currentUnits) async {
     print('🔵 Drop button pressed for: ${subject.code}');
-    
     // Show confirmation dialog
     final confirmed = await showDialog<bool>(
       context: context,
@@ -246,31 +232,27 @@ class _MySubjectsScreenState extends ConsumerState<MySubjectsScreen> {
         },
       ),
     );
-
     print('🔵 Dialog result: $confirmed');
-    
     // If user didn't confirm, return
-    if (confirmed != true) {
+    if (confirmed != true || !mounted) {
       print('🔵 User cancelled drop');
       return;
     }
-
     print('🔵 User confirmed, starting drop process');
-    
     // User confirmed, proceed with dropping
     setState(() {
       _droppingSubjectId = subject.id;
     });
-
     try {
       print('🔵 Calling dropSubject...');
-      final result = await ref.read(enrollmentActionsProvider.notifier).dropSubject(subject.id);
+      // Read the provider before the async operation
+      final enrollmentActions = ref.read(enrollmentActionsProvider.notifier);
+      final result = await enrollmentActions.dropSubject(subject.id);
       print('🔵 Drop result: $result');
-
+      if (!mounted) return;
       setState(() {
         _droppingSubjectId = null;
       });
-
       if (mounted) {
         print('🔵 Showing snackbar');
         ScaffoldMessenger.of(context).showSnackBar(
@@ -295,11 +277,9 @@ class _MySubjectsScreenState extends ConsumerState<MySubjectsScreen> {
     } catch (e) {
       print('🔴 Error during drop: $e');
       if (!mounted) return;
-
       setState(() {
         _droppingSubjectId = null;
       });
-
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Error: $e'),

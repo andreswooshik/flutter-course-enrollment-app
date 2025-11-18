@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../core/constants/app_colors.dart';
@@ -9,15 +9,11 @@ import '../viewmodels/login_viewmodel.dart';
 import '../widgets/custom_button.dart';
 import '../widgets/custom_text_field.dart';
 import '../widgets/snackbar_helper.dart';
-
-
 class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
-
   @override
   ConsumerState<LoginScreen> createState() => _LoginScreenState();
 }
-
 class _LoginScreenState extends ConsumerState<LoginScreen>
     with SingleTickerProviderStateMixin {
   final _formKey = GlobalKey<FormState>();
@@ -25,17 +21,14 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
   final _passwordController = TextEditingController();
   final _accountFocusNode = FocusNode();
   final _passwordFocusNode = FocusNode();
-
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
   late Animation<Offset> _slideAnimation;
-
   @override
   void initState() {
     super.initState();
     _setupAnimations();
   }
-
   void _setupAnimations() {
     _animationController = AnimationController(
       vsync: this,
@@ -53,7 +46,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
       curve: Curves.easeOutCubic,
     ));
   }
-
   @override
   void dispose() {
     _accountController.dispose();
@@ -63,20 +55,15 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
     _animationController.dispose();
     super.dispose();
   }
-
   Future<void> _handleLogin() async {
     FocusScope.of(context).unfocus();
-
     if (!_formKey.currentState!.validate()) return;
-
     final viewModel = ref.read(loginViewModelProvider.notifier);
     final result = await viewModel.login(
       _accountController.text.trim(),
       _passwordController.text,
     );
-
     if (!mounted) return;
-
     switch (result.type) {
       case LoginResultType.success:
         SnackBarHelper.showSuccess(context, AppStrings.loginSuccess);
@@ -98,11 +85,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
         break;
     }
   }
-
   void _toggleLoginForm() {
     ref.read(loginViewModelProvider.notifier).toggleLoginForm();
     final showLoginForm = ref.read(loginViewModelProvider).showLoginForm;
-    
     if (showLoginForm) {
       _animationController.forward();
       Future.delayed(const Duration(milliseconds: 400), () {
@@ -115,11 +100,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
       _passwordController.clear();
     }
   }
-
   @override
   Widget build(BuildContext context) {
     final loginState = ref.watch(loginViewModelProvider);
-    
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
@@ -130,7 +113,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
               final horizontalPadding = constraints.maxWidth > 600
                   ? AppDimensions.tabletPadding
                   : AppDimensions.mobilePadding;
-
               return SingleChildScrollView(
                 physics: const ClampingScrollPhysics(),
                 child: ConstrainedBox(
@@ -157,7 +139,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
       ),
     );
   }
-
   Widget _buildWelcomeScreen() {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -186,7 +167,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
       ],
     );
   }
-
   Widget _buildLogo() {
     return Hero(
       tag: 'logo',
@@ -227,7 +207,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
       ),
     );
   }
-
   Widget _buildTitle() {
     return const Text(
       AppStrings.appTitle,
@@ -240,7 +219,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
       ),
     );
   }
-
   Widget _buildMotto() {
     return Container(
       padding: const EdgeInsets.symmetric(
@@ -263,7 +241,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
       ),
     );
   }
-
   Widget _buildLoginForm(LoginState loginState) {
     return FadeTransition(
       opacity: _fadeAnimation,
@@ -402,4 +379,3 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
     );
   }
 }
-

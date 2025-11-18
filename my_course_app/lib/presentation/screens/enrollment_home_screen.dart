@@ -8,15 +8,12 @@ import '../widgets/enrollment_status_card.dart';
 import 'subject_list_screen.dart';
 import 'my_subjects_screen.dart';
 import 'profile_screen.dart';
-
 class EnrollmentHomeScreen extends ConsumerWidget {
   const EnrollmentHomeScreen({super.key});
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final enrolledSubjectsAsync = ref.watch(enrolledSubjectsProvider);
     final totalUnitsAsync = ref.watch(totalEnrolledUnitsProvider);
-
     return Scaffold(
       appBar: CustomAppBar(
         actions: [
@@ -47,7 +44,6 @@ class EnrollmentHomeScreen extends ConsumerWidget {
                     subtitle: "Manage your subjects and track your progress.",
                   ),
                   const SizedBox(height: 24),
-
                   totalUnitsAsync.when(
                     data: (totalUnits) {
                       return enrolledSubjectsAsync.when(
@@ -73,11 +69,8 @@ class EnrollmentHomeScreen extends ConsumerWidget {
                       child: Text('Error: $error'),
                     ),
                   ),
-
                   const SizedBox(height: 24),
-
                   _buildAcademicInformation(context, ref),
-
                   const SizedBox(height: 100),
                 ],
               ),
@@ -110,7 +103,6 @@ class EnrollmentHomeScreen extends ConsumerWidget {
       ),
     );
   }
-
   Widget _buildAcademicInformation(BuildContext context, WidgetRef ref) {
     return Container(
       padding: const EdgeInsets.all(20),
@@ -163,7 +155,6 @@ class EnrollmentHomeScreen extends ConsumerWidget {
       ),
     );
   }
-
   void _showComingSoonNotification(BuildContext context, String title) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
@@ -177,7 +168,6 @@ class EnrollmentHomeScreen extends ConsumerWidget {
       ),
     );
   }
-
   Widget _buildActionTile(
     BuildContext context, {
     required IconData icon,
@@ -237,18 +227,14 @@ class EnrollmentHomeScreen extends ConsumerWidget {
     );
   }
 }
-
-
 class PlaceholderScreen extends StatelessWidget {
   final String title;
   final String message;
-
   const PlaceholderScreen({
     super.key,
     required this.title,
     required this.message,
   });
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(

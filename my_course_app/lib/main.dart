@@ -7,24 +7,20 @@ import 'presentation/screens/enrollment_home_screen.dart';
 import 'presentation/screens/subject_list_screen.dart';
 import 'presentation/screens/my_subjects_screen.dart';
 import 'services/subject_storage_service.dart';
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   print('🔄 Initializing subjects...');
   final subjectService = SubjectStorageService();
   await subjectService.initializeSubjects();
   print('✅ Subjects initialized!');
-  
   runApp(
     const ProviderScope(
       child: MyApp(),
     ),
   );
 }
-
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -39,7 +35,6 @@ class MyApp extends StatelessWidget {
           secondary: const Color(0xFFFFD700),  // USJ-R Gold
         ),
         useMaterial3: true,
-        
         // Typography with Google Fonts
         textTheme: GoogleFonts.poppinsTextTheme(
           ThemeData.light().textTheme,
@@ -92,7 +87,6 @@ class MyApp extends StatelessWidget {
             fontWeight: FontWeight.w500,
           ),
         ),
-        
         // AppBar theme
         appBarTheme: AppBarTheme(
           titleTextStyle: GoogleFonts.poppins(
@@ -101,7 +95,6 @@ class MyApp extends StatelessWidget {
             color: Colors.white,
           ),
         ),
-        
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ElevatedButton.styleFrom(
             backgroundColor: const Color(0xFF1B5E20),  // USJ-R Green

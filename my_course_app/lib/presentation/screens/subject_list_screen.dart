@@ -6,36 +6,29 @@ import '../widgets/custom_app_bar.dart';
 import '../widgets/subject_card.dart';
 import '../../domain/models/subject.dart';
 import '../widgets/enrollment_confirmation_dialog.dart';
-
 class SubjectListScreen extends ConsumerStatefulWidget {
   const SubjectListScreen({super.key});
-
   @override
   ConsumerState<SubjectListScreen> createState() => _SubjectListScreenState();
 }
-
 class _SubjectListScreenState extends ConsumerState<SubjectListScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
   String? _enrollingSubjectId;
-
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
   }
-
   @override
   void dispose() {
     _tabController.dispose();
     super.dispose();
   }
-
   @override
   Widget build(BuildContext context) {
     final totalUnitsAsync = ref.watch(totalEnrolledUnitsProvider);
     final enrolledSubjectsAsync = ref.watch(enrolledSubjectsProvider);
-
     return Scaffold(
       appBar: const CustomAppBar(
         title: 'Browse Subjects',
@@ -88,7 +81,6 @@ class _SubjectListScreenState extends ConsumerState<SubjectListScreen>
             loading: () => const LinearProgressIndicator(),
             error: (_, __) => const SizedBox.shrink(),
           ),
-
           // Tab Bar
           Container(
             decoration: BoxDecoration(
@@ -114,17 +106,14 @@ class _SubjectListScreenState extends ConsumerState<SubjectListScreen>
               ],
             ),
           ),
-
           // Tab Views
           Expanded(
             child: enrolledSubjectsAsync.when(
               data: (enrolledSubjects) {
                 final enrolledIds = enrolledSubjects.map((es) => es.subject.id).toSet();
-
                 return totalUnitsAsync.when(
                   data: (totalUnits) {
                     final remainingUnits = 24 - totalUnits;
-
                     return TabBarView(
                       controller: _tabController,
                       children: [
@@ -166,7 +155,6 @@ class _SubjectListScreenState extends ConsumerState<SubjectListScreen>
       ),
     );
   }
-
   Widget _buildSubjectList(
     AsyncValue<List<Subject>> subjectsAsync,
     Set<String> enrolledIds,
@@ -196,7 +184,6 @@ class _SubjectListScreenState extends ConsumerState<SubjectListScreen>
             ),
           );
         }
-
         return ListView.builder(
           padding: const EdgeInsets.all(16),
           itemCount: subjects.length,
@@ -204,7 +191,6 @@ class _SubjectListScreenState extends ConsumerState<SubjectListScreen>
             final subject = subjects[index];
             final isEnrolled = enrolledIds.contains(subject.id);
             final isEnrolling = _enrollingSubjectId == subject.id;
-
             return SubjectCard(
               subject: subject,
               isEnrolled: isEnrolled,
@@ -252,12 +238,10 @@ class _SubjectListScreenState extends ConsumerState<SubjectListScreen>
       ),
     );
   }
-
   Future<void> _handleEnroll(Subject subject) async {
     // Get current units
     final totalUnits = await ref.read(totalEnrolledUnitsProvider.future);
     final remainingUnits = 24 - totalUnits;
-
     // Show confirmation dialog
     final confirmed = await showDialog<bool>(
       context: context,
@@ -267,29 +251,22 @@ class _SubjectListScreenState extends ConsumerState<SubjectListScreen>
         remainingUnits: remainingUnits,
       ),
     );
-
     // If user didn't confirm, return
-    if (confirmed != true) return;
-
+    if (confirmed != true || !mounted) return;
     // User confirmed, proceed with enrollment
     setState(() {
       _enrollingSubjectId = subject.id;
     });
-
     try {
-      final result = await ref
-          .read(enrollmentActionsProvider.notifier)
-          .enrollInSubject(subject.id);
-
+      // Read the provider before the async operation
+      final enrollmentActions = ref.read(enrollmentActionsProvider.notifier);
+      final result = await enrollmentActions.enrollInSubject(subject.id);
       if (!mounted) return;
-
       setState(() {
         _enrollingSubjectId = null;
       });
-
       // Show result message
       final isSuccess = result.toLowerCase().contains('success');
-      
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Row(
@@ -314,11 +291,9 @@ class _SubjectListScreenState extends ConsumerState<SubjectListScreen>
       );
     } catch (e) {
       if (!mounted) return;
-
       setState(() {
         _enrollingSubjectId = null;
       });
-
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Error: $e'),

@@ -1,15 +1,12 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import '../../authenticator.dart';
 import '../../services/user_storage_service.dart';
 import '../../core/constants/app_colors.dart';
-
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({Key? key}) : super(key: key);
-
   @override
   State<RegisterScreen> createState() => _RegisterScreenState();
 }
-
 class _RegisterScreenState extends State<RegisterScreen> {
   final _formKey = GlobalKey<FormState>();
   final _firstNameController = TextEditingController();
@@ -20,25 +17,20 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final _confirmPasswordController = TextEditingController();
   final _authenticator = Authenticator();
   final _userStorage = UserStorageService();
-  
   bool _obscurePassword = true;
   bool _obscureConfirmPassword = true;
   bool _isLoading = false;
   bool _acceptedTerms = false;
-  
   // Course and Year selection
   String? _selectedCourse;
   int? _selectedYear;
-  
   final List<String> _courses = [
     'BSIT - Bachelor of Science in Information Technology',
     'BSCS - Bachelor of Science in Computer Science',
     'BSIS - Bachelor of Science in Information Systems',
     'ACT - Associate in Computer Technology',
   ];
-  
   final List<int> _years = [1, 2, 3, 4];
-
   @override
   void dispose() {
     _firstNameController.dispose();
@@ -49,7 +41,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
     _confirmPasswordController.dispose();
     super.dispose();
   }
-
   String? _validateEmail(String? value) {
     if (value == null || value.isEmpty) {
       return 'Email is required';
@@ -65,27 +56,22 @@ class _RegisterScreenState extends State<RegisterScreen> {
     }
     return null;
   }
-
   String? _validateAccountID(String? value) {
     if (value == null || value.isEmpty) {
       return 'Account ID is required';
     }
     // Remove any spaces or dashes
     final cleanValue = value.replaceAll(RegExp(r'[\s\-]'), '');
-    
     // Check if it's exactly 10 digits
     if (cleanValue.length != 10) {
       return 'Account ID must be exactly 10 digits';
     }
-    
     // Check if it contains only numbers
     if (!RegExp(r'^[0-9]{10}$').hasMatch(cleanValue)) {
       return 'Account ID must contain only numbers';
     }
-    
     return null;
   }
-
   String? _validatePassword(String? value) {
     if (value == null || value.isEmpty) {
       return 'Password is required';
@@ -107,21 +93,18 @@ class _RegisterScreenState extends State<RegisterScreen> {
     }
     return null;
   }
-
   String? _validateConfirmPassword(String? value) {
     if (value != _passwordController.text) {
       return 'Passwords do not match';
     }
     return null;
   }
-
   String? _validateNotEmpty(String? value, String fieldName) {
     if (value == null || value.isEmpty) {
       return '$fieldName is required';
     }
     return null;
   }
-
   String _getPasswordStrength(String password) {
     int strength = 0;
     if (password.length >= 8) strength++;
@@ -130,12 +113,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
     if (RegExp(r'[a-z]').hasMatch(password)) strength++;
     if (RegExp(r'[0-9]').hasMatch(password)) strength++;
     if (RegExp(r'[!@#$%^&*(),.?":{}|<>]').hasMatch(password)) strength++;
-
     if (strength <= 2) return 'Weak';
     if (strength <= 4) return 'Medium';
     return 'Strong';
   }
-
   Color _getPasswordStrengthColor(String strength) {
     switch (strength) {
       case 'Weak':
@@ -148,12 +129,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
         return Colors.grey;
     }
   }
-
   void _register() async {
     if (!_formKey.currentState!.validate()) {
       return;
     }
-
     if (!_acceptedTerms) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -163,18 +142,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
       );
       return;
     }
-
     setState(() {
       _isLoading = true;
     });
-
     try {
-      
       final passwordHash = await Future.microtask(() => 
         _authenticator.hashPassword(_passwordController.text)
       );
-      
-      
       final success = await _userStorage.saveUser(
         firstName: _firstNameController.text.trim(),
         lastName: _lastNameController.text.trim(),
@@ -184,32 +158,22 @@ class _RegisterScreenState extends State<RegisterScreen> {
         course: _selectedCourse,
         year: _selectedYear,
       );
-
       if (!mounted) return;
-
       if (success) {
         final registeredName = '${_firstNameController.text.trim()} ${_lastNameController.text.trim()}';
         final registeredAccountID = _accountIDController.text.trim();
         final registeredCourse = _selectedCourse;
         final registeredYear = _selectedYear;
-        
         final userCount = await _userStorage.getUserCount();
-        
         setState(() {
           _isLoading = false;
         });
-
-        
         _formKey.currentState?.reset();
-        
-        
         _lastNameController.clear();
         _emailController.clear();
         _accountIDController.clear();
         _passwordController.clear();
         _confirmPasswordController.clear();
-        
-        
         setState(() {
           _selectedCourse = null;
           _selectedYear = null;
@@ -217,13 +181,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
           _obscurePassword = true;
           _obscureConfirmPassword = true;
         });
-
-       
         if (!mounted) return;
-        
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('✅ Registration Successful!'),
+            content: Text('? Registration Successful!'),
             backgroundColor: Colors.green,
             duration: const Duration(seconds: 3),
             action: SnackBarAction(
@@ -231,7 +192,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
               textColor: Colors.white,
               onPressed: () {
                 if (!mounted) return;
-                
                 showDialog(
                   context: context,
                   builder: (dialogContext) => AlertDialog(
@@ -242,7 +202,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           const Text(
-                            '✅ Account created successfully!',
+                            '? Account created successfully!',
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                               color: Colors.green,
@@ -277,8 +237,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
             ),
           ),
         );
-
-        
         await Future.delayed(const Duration(seconds: 6));
         if (mounted) {
           Navigator.pop(context);
@@ -287,10 +245,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
         setState(() {
           _isLoading = false;
         });
-        
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('❌ Account ID already exists! Please use a different ID.'),
+            content: Text('? Account ID already exists! Please use a different ID.'),
             backgroundColor: Colors.orange,
             duration: Duration(seconds: 3),
           ),
@@ -303,7 +260,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         });
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('❌ Error: $e'),
+            content: Text('? Error: $e'),
             backgroundColor: Colors.red,
             duration: const Duration(seconds: 4),
           ),
@@ -311,7 +268,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
       }
     }
   }
-
   Widget _buildDetailRow(String label, String value) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 8.0),
@@ -338,19 +294,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
       ),
     );
   }
-
   @override
   Widget build(BuildContext context) {
     final passwordStrength = _passwordController.text.isEmpty 
         ? '' 
         : _getPasswordStrength(_passwordController.text);
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('Create Account'),
         centerTitle: true,
-        backgroundColor: AppColors.primaryBlue,
-        foregroundColor: AppColors.white,
+        backgroundColor: const Color(0xFF1B5E20),
+        foregroundColor: Colors.white,
         elevation: 0,
       ),
       backgroundColor: AppColors.backgroundGray,
@@ -362,22 +316,23 @@ class _RegisterScreenState extends State<RegisterScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                
-                Container(
-                  padding: const EdgeInsets.all(20),
-                  decoration: BoxDecoration(
-                    color: AppColors.primaryBlue.withOpacity(0.1),
-                    shape: BoxShape.circle,
-                  ),
-                  child: const Icon(
-                    Icons.school, 
-                    size: 64, 
-                    color: AppColors.primaryBlue,
+                Center(
+                  child: Container(
+                    width: 100,
+                    height: 100,
+                    padding: const EdgeInsets.all(20),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF1B5E20).withOpacity(0.1),
+                      shape: BoxShape.circle,
+                    ),
+                    child: const Icon(
+                      Icons.school, 
+                      size: 60, 
+                      color: Color(0xFF1B5E20),
+                    ),
                   ),
                 ),
-                const SizedBox(height: 24),
-                
-               
+                const SizedBox(height: 16),
                 Text(
                   'Student Registration',
                   style: Theme.of(context).textTheme.headlineSmall?.copyWith(
@@ -386,32 +341,30 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ),
                   textAlign: TextAlign.center,
                 ),
-                const SizedBox(height: 8),
-                
-                
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 6,
-                  ),
-                  decoration: BoxDecoration(
-                    color: AppColors.accentGold.withOpacity(0.2),
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  child: const Text(
-                    'Caritas et Scientia',
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: AppColors.primaryBlue,
-                      fontStyle: FontStyle.italic,
-                      fontWeight: FontWeight.w600,
+                const SizedBox(height: 4),
+                Center(
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 4,
                     ),
-                    textAlign: TextAlign.center,
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFFFD700).withOpacity(0.2),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: const Text(
+                      'Caritas et Scientia',
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: Color(0xFF1B5E20),
+                        fontStyle: FontStyle.italic,
+                        fontWeight: FontWeight.w600,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
                   ),
                 ),
-                const SizedBox(height: 32),
-
-              
+                const SizedBox(height: 20),
                 TextFormField(
                   controller: _firstNameController,
                   decoration: InputDecoration(
@@ -434,9 +387,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   textInputAction: TextInputAction.next,
                   validator: (value) => _validateNotEmpty(value, 'First name'),
                 ),
-                const SizedBox(height: 16),
-
-     
+                const SizedBox(height: 12),
                 TextFormField(
                   controller: _lastNameController,
                   decoration: InputDecoration(
@@ -459,8 +410,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   textInputAction: TextInputAction.next,
                   validator: (value) => _validateNotEmpty(value, 'Last name'),
                 ),
-                const SizedBox(height: 16),
-
+                const SizedBox(height: 12),
                 TextFormField(
                   controller: _emailController,
                   decoration: InputDecoration(
@@ -486,9 +436,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   textInputAction: TextInputAction.next,
                   validator: _validateEmail,
                 ),
-                const SizedBox(height: 16),
-
-
+                const SizedBox(height: 12),
                 TextFormField(
                   controller: _accountIDController,
                   decoration: InputDecoration(
@@ -516,9 +464,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   textInputAction: TextInputAction.next,
                   validator: _validateAccountID,
                 ),
-                const SizedBox(height: 16),
-
-           
+                const SizedBox(height: 12),
                 DropdownButtonFormField<String>(
                   value: _selectedCourse,
                   decoration: InputDecoration(
@@ -561,9 +507,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     return null;
                   },
                 ),
-                const SizedBox(height: 16),
-
-    
+                const SizedBox(height: 12),
                 DropdownButtonFormField<int>(
                   value: _selectedYear,
                   decoration: InputDecoration(
@@ -601,9 +545,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     return null;
                   },
                 ),
-                const SizedBox(height: 16),
-
-     
+                const SizedBox(height: 12),
                 TextFormField(
                   controller: _passwordController,
                   decoration: InputDecoration(
@@ -636,8 +578,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   onChanged: (value) => setState(() {}),
                 ),
                 const SizedBox(height: 8),
-
-     
                 if (passwordStrength.isNotEmpty)
                   Row(
                     children: [
@@ -660,9 +600,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       ),
                     ],
                   ),
-                const SizedBox(height: 16),
-
-     
+                const SizedBox(height: 12),
                 TextFormField(
                   controller: _confirmPasswordController,
                   decoration: InputDecoration(
@@ -693,9 +631,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   textInputAction: TextInputAction.done,
                   validator: _validateConfirmPassword,
                 ),
-                const SizedBox(height: 20),
-
-    
+                const SizedBox(height: 16),
                 Container(
                   decoration: BoxDecoration(
                     color: AppColors.white,
@@ -714,17 +650,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     contentPadding: const EdgeInsets.symmetric(horizontal: 12),
                   ),
                 ),
-                const SizedBox(height: 32),
-
-      
+                const SizedBox(height: 20),
                 SizedBox(
                   width: double.infinity,
                   height: 56,
                   child: ElevatedButton(
                     onPressed: _isLoading ? null : _register,
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.primaryBlue,
-                      foregroundColor: AppColors.white,
+                      backgroundColor: const Color(0xFF1B5E20),
+                      foregroundColor: Colors.white,
                       elevation: 2,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(16),
@@ -750,8 +684,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ),
                 ),
                 const SizedBox(height: 20),
-
-
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -780,5 +712,3 @@ class _RegisterScreenState extends State<RegisterScreen> {
     );
   }
 }
-
-

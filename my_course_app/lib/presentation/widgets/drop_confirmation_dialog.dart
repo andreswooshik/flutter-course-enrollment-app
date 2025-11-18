@@ -1,17 +1,14 @@
 import 'package:flutter/material.dart';
-
 class DropConfirmationDialog extends StatelessWidget {
   final String subjectCode;
   final String subjectName;
   final VoidCallback onConfirm;
-
   const DropConfirmationDialog({
     super.key,
     required this.subjectCode,
     required this.subjectName,
     required this.onConfirm,
   });
-
   @override
   Widget build(BuildContext context) {
     return AlertDialog(

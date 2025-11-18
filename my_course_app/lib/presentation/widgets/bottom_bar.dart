@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 class BottomBar extends StatelessWidget {
   final String buttonOneText;
   final bool buttonOneMainColor;
@@ -8,7 +7,6 @@ class BottomBar extends StatelessWidget {
   final String? buttonTwoText;
   final bool? buttonTwoMainColor;
   final VoidCallback? buttonTwoFunction;
-
   const BottomBar({
     super.key,
     required this.buttonOneText,
@@ -19,7 +17,6 @@ class BottomBar extends StatelessWidget {
     this.buttonTwoMainColor,
     this.buttonTwoFunction,
   });
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -62,7 +59,6 @@ class BottomBar extends StatelessWidget {
       ),
     );
   }
-
   Widget _buildButton(
     BuildContext context, {
     required String text,

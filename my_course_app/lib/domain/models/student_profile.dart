@@ -5,7 +5,6 @@ class StudentProfile {
   final String email;
   final String course;
   final String year;
-
   StudentProfile({
     required this.accountId,
     required this.firstName,
@@ -14,16 +13,13 @@ class StudentProfile {
     required this.course,
     required this.year,
   });
-
   // Get full name
   String get fullName => '$firstName $lastName';
-
   // Get year as display text
   String get yearLevel {
     if (year.isEmpty) return 'N/A';
     return 'Year $year';
   }
-
   // Convert to JSON for storage
   Map<String, dynamic> toJson() {
     return {
@@ -35,7 +31,6 @@ class StudentProfile {
       'year': year,
     };
   }
-
   // Create from map (from CSV parsing)
   factory StudentProfile.fromMap(Map<String, String>? map) {
     if (map == null) {
@@ -48,7 +43,6 @@ class StudentProfile {
         year: '',
       );
     }
-    
     return StudentProfile(
       accountId: map['accountId'] ?? '',
       firstName: map['firstName'] ?? '',

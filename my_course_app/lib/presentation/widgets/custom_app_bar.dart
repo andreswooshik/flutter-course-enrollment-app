@@ -1,17 +1,14 @@
 import 'package:flutter/material.dart';
-
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String? title;
   final bool showBackButton;
   final List<Widget>? actions; 
-
   const CustomAppBar({
     super.key,
     this.title,
     this.showBackButton = false,
     this.actions,  
   });
-
   @override
   Widget build(BuildContext context) {
     return AppBar(
@@ -38,7 +35,6 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       actions: actions, 
     );
   }
-
   @override
   Size get preferredSize => const Size.fromHeight(56);
 }

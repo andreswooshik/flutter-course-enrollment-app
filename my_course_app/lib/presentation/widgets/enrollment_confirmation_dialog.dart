@@ -1,22 +1,18 @@
 import 'package:flutter/material.dart';
 import '../../domain/models/subject.dart';
-
 class EnrollmentConfirmationDialog extends StatelessWidget {
   final Subject subject;
   final int currentUnits;
   final int remainingUnits;
-
   const EnrollmentConfirmationDialog({
     super.key,
     required this.subject,
     required this.currentUnits,
     required this.remainingUnits,
   });
-
   @override
   Widget build(BuildContext context) {
     final newTotal = currentUnits + subject.units;
-
     return Dialog(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16),
@@ -40,9 +36,7 @@ class EnrollmentConfirmationDialog extends StatelessWidget {
                 size: 48,
               ),
             ),
-
             const SizedBox(height: 20),
-
             // Title
             const Text(
               'Confirm Enrollment',
@@ -51,9 +45,7 @@ class EnrollmentConfirmationDialog extends StatelessWidget {
                 fontWeight: FontWeight.bold,
               ),
             ),
-
             const SizedBox(height: 8),
-
             // Subtitle
             Text(
               'Are you sure you want to enroll in this subject?',
@@ -63,9 +55,7 @@ class EnrollmentConfirmationDialog extends StatelessWidget {
                 color: Colors.grey[600],
               ),
             ),
-
             const SizedBox(height: 24),
-
             // Subject Info Card
             Container(
               padding: const EdgeInsets.all(16),
@@ -96,9 +86,7 @@ class EnrollmentConfirmationDialog extends StatelessWidget {
                       ),
                     ),
                   ),
-
                   const SizedBox(height: 12),
-
                   // Subject Name
                   Text(
                     subject.name,
@@ -108,9 +96,7 @@ class EnrollmentConfirmationDialog extends StatelessWidget {
                       height: 1.3,
                     ),
                   ),
-
                   const SizedBox(height: 16),
-
                   // Units
                   Row(
                     children: [
@@ -129,9 +115,7 @@ class EnrollmentConfirmationDialog extends StatelessWidget {
                       ),
                     ],
                   ),
-
                   const SizedBox(height: 12),
-
                   // Schedule
                   Row(
                     children: [
@@ -155,9 +139,7 @@ class EnrollmentConfirmationDialog extends StatelessWidget {
                 ],
               ),
             ),
-
             const SizedBox(height: 20),
-
             // Units Summary Box
             Container(
               padding: const EdgeInsets.all(14),
@@ -199,9 +181,7 @@ class EnrollmentConfirmationDialog extends StatelessWidget {
                 ],
               ),
             ),
-
             const SizedBox(height: 24),
-
             // Action Buttons
             Row(
               children: [
@@ -226,9 +206,7 @@ class EnrollmentConfirmationDialog extends StatelessWidget {
                     ),
                   ),
                 ),
-
                 const SizedBox(width: 12),
-
                 // Confirm Button
                 Expanded(
                   child: ElevatedButton(

@@ -5,7 +5,6 @@ class Enrollment {
   final String subjectId;  // Changed from courseId
   final DateTime enrolledAt;
   final String status;  // 'enrolled', 'pending_drop', 'dropped'
-
   Enrollment({
     required this.id,
     required this.studentId,
@@ -13,7 +12,6 @@ class Enrollment {
     required this.enrolledAt,
     this.status = 'enrolled',
   });
-
   /// Convert to JSON for storage
   Map<String, dynamic> toJson() {
     return {
@@ -24,7 +22,6 @@ class Enrollment {
       'status': status,
     };
   }
-
   /// Create from JSON
   factory Enrollment.fromJson(Map<String, dynamic> json) {
     return Enrollment(
@@ -35,13 +32,11 @@ class Enrollment {
       status: json['status'] as String? ?? 'enrolled',
     );
   }
-
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
     return other is Enrollment && other.id == id && other.status == status;
   }
-
   @override
   int get hashCode => id.hashCode;
 }

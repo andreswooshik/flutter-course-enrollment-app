@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../core/constants/app_colors.dart';
-
-
 class SnackBarHelper {
   SnackBarHelper._();
-
   static void showSuccess(BuildContext context, String message) {
     _showSnackBar(
       context,
@@ -13,7 +10,6 @@ class SnackBarHelper {
       Icons.check_circle,
     );
   }
-
   static void showError(BuildContext context, String message) {
     _showSnackBar(
       context,
@@ -22,7 +18,6 @@ class SnackBarHelper {
       Icons.error_outline,
     );
   }
-
   static void showInfo(BuildContext context, String message) {
     _showSnackBar(
       context,
@@ -31,7 +26,6 @@ class SnackBarHelper {
       Icons.info_outline,
     );
   }
-
   static void _showSnackBar(
     BuildContext context,
     String message,

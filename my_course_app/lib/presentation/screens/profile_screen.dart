@@ -2,10 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../providers/student_profile_provider.dart';
 import '../../core/constants/app_colors.dart';
-
 class ProfileScreen extends ConsumerWidget {
   const ProfileScreen({super.key});
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final profileAsync = ref.watch(currentStudentProfileProvider);
@@ -89,7 +87,6 @@ class ProfileScreen extends ConsumerWidget {
           return SingleChildScrollView(
             child: Column(
               children: [
-                
                 Container(
                   width: double.infinity,
                   decoration: BoxDecoration(
@@ -106,7 +103,6 @@ class ProfileScreen extends ConsumerWidget {
                     padding: const EdgeInsets.fromLTRB(24, 32, 24, 40),
                     child: Column(
                       children: [
-                        
                         Container(
                           padding: const EdgeInsets.all(4),
                           decoration: BoxDecoration(
@@ -127,7 +123,6 @@ class ProfileScreen extends ConsumerWidget {
                           ),
                         ),
                         const SizedBox(height: 16),
-                        
                         Text(
                           '${profile.firstName} ${profile.lastName}',
                           style: const TextStyle(
@@ -138,7 +133,6 @@ class ProfileScreen extends ConsumerWidget {
                           textAlign: TextAlign.center,
                         ),
                         const SizedBox(height: 8),
-                        
                         Container(
                           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                           decoration: BoxDecoration(
@@ -165,8 +159,6 @@ class ProfileScreen extends ConsumerWidget {
                     ),
                   ),
                 ),
-                
-
                 Padding(
                   padding: const EdgeInsets.all(24),
                   child: Column(
@@ -181,8 +173,6 @@ class ProfileScreen extends ConsumerWidget {
                         ),
                       ),
                       const SizedBox(height: 16),
-                      
-                      
                       _buildInfoCard(
                         icon: Icons.email_outlined,
                         label: 'Email Address',
@@ -190,8 +180,6 @@ class ProfileScreen extends ConsumerWidget {
                         iconColor: Colors.red,
                       ),
                       const SizedBox(height: 12),
-                      
-                      
                       _buildInfoCard(
                         icon: Icons.school_outlined,
                         label: 'Degree Program',
@@ -199,18 +187,13 @@ class ProfileScreen extends ConsumerWidget {
                         iconColor: Colors.blue,
                       ),
                       const SizedBox(height: 12),
-                      
-                    
                       _buildInfoCard(
                         icon: Icons.calendar_today_outlined,
                         label: 'Year Level',
                         value: profile.year.isNotEmpty ? 'Year ${profile.year}' : 'Not specified',
                         iconColor: Colors.green,
                       ),
-                      
                       const SizedBox(height: 32),
-                      
-                      
                       Container(
                         padding: const EdgeInsets.all(16),
                         decoration: BoxDecoration(
@@ -246,7 +229,6 @@ class ProfileScreen extends ConsumerWidget {
       ),
     );
   }
-
   Widget _buildInfoCard({
     required IconData icon,
     required String label,
@@ -309,13 +291,10 @@ class ProfileScreen extends ConsumerWidget {
       ),
     );
   }
-
-  
   String _getFullDegreeName(String course) {
     if (course.contains('-')) {
       return course;
     }
-    
     final Map<String, String> degreeMap = {
       'BSIT': 'BSIT - Bachelor of Science in Information Technology',
       'BSCS': 'BSCS - Bachelor of Science in Computer Science',
@@ -324,7 +303,6 @@ class ProfileScreen extends ConsumerWidget {
       'BSGD': 'BSGD - Bachelor of Science in Game Development',
       'BSGD-Game Development': 'BSGD - Bachelor of Science in Game Development',
     };
-    
     return degreeMap[course] ?? course;
   }
 }

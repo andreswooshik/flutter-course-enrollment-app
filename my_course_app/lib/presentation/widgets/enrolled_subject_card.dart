@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import '../../domain/models/subject.dart';
-
 class EnrolledSubjectCard extends StatelessWidget {
   final Subject subject;
   final String enrollmentStatus;
   final bool isDropping;
   final VoidCallback onDrop;
-
   const EnrolledSubjectCard({
     super.key,
     required this.subject,
@@ -14,7 +12,6 @@ class EnrolledSubjectCard extends StatelessWidget {
     required this.isDropping,
     required this.onDrop,
   });
-
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -55,14 +52,11 @@ class EnrolledSubjectCard extends StatelessWidget {
                     ),
                   ),
                 ),
-                
                 // Status Badge
                 _buildStatusBadge(),
               ],
             ),
-            
             const SizedBox(height: 12),
-
             // Subject Name
             Text(
               subject.name,
@@ -72,9 +66,7 @@ class EnrolledSubjectCard extends StatelessWidget {
                 height: 1.3,
               ),
             ),
-
             const SizedBox(height: 12),
-
             // Info Row
             Wrap(
               spacing: 16,
@@ -90,9 +82,7 @@ class EnrolledSubjectCard extends StatelessWidget {
                 ),
               ],
             ),
-
             const SizedBox(height: 8),
-
             // Schedule
             Row(
               children: [
@@ -113,9 +103,7 @@ class EnrolledSubjectCard extends StatelessWidget {
                 ),
               ],
             ),
-
             const SizedBox(height: 8),
-
             // Instructor
             Row(
               children: [
@@ -136,9 +124,7 @@ class EnrolledSubjectCard extends StatelessWidget {
                 ),
               ],
             ),
-
             const SizedBox(height: 12),
-
             // Drop Info Message
             Container(
               width: double.infinity,
@@ -174,7 +160,6 @@ class EnrolledSubjectCard extends StatelessWidget {
       ),
     );
   }
-
   Widget _buildStatusBadge() {
     if (enrollmentStatus == 'pending_drop') {
       return Container(
@@ -205,7 +190,6 @@ class EnrolledSubjectCard extends StatelessWidget {
         ),
       );
     }
-    
     // Default enrolled badge
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
@@ -235,7 +219,6 @@ class EnrolledSubjectCard extends StatelessWidget {
       ),
     );
   }
-
   Widget _buildInfoChip({required IconData icon, required String label}) {
     return Row(
       mainAxisSize: MainAxisSize.min,

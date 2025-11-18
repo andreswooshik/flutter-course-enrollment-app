@@ -2,7 +2,6 @@
 class AppConstants {
   // Enrollment limits
   static const int maxUnitsPerSemester = 24;
-  
   // Messages
   static const String unitLimitExceeded = 
     'Cannot enroll. This would exceed the unit limit of $maxUnitsPerSemester units.';

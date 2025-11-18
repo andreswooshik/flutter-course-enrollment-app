@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../core/constants/app_colors.dart';
-
-
 class HomeScreen extends StatelessWidget {
   const HomeScreen({Key? key}) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -21,7 +18,6 @@ class HomeScreen extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              
               Container(
                 padding: const EdgeInsets.all(24),
                 decoration: BoxDecoration(
@@ -34,22 +30,16 @@ class HomeScreen extends StatelessWidget {
                   color: AppColors.primaryBlue,
                 ),
               ),
-              
               const SizedBox(height: 32),
-              
-              
               const Text(
-                'Welcome to USJR!',
+                'Welcome to USJ-R!',
                 style: TextStyle(
                   fontSize: 32,
                   fontWeight: FontWeight.bold,
                   color: AppColors.darkBlue,
                 ),
               ),
-              
               const SizedBox(height: 16),
-              
-             
               const Text(
                 'Course Enrollment System',
                 style: TextStyle(
@@ -58,10 +48,7 @@ class HomeScreen extends StatelessWidget {
                   fontWeight: FontWeight.w500,
                 ),
               ),
-              
               const SizedBox(height: 8),
-              
-       
               Container(
                 padding: const EdgeInsets.symmetric(
                   horizontal: 20,
@@ -81,16 +68,12 @@ class HomeScreen extends StatelessWidget {
                   ),
                 ),
               ),
-              
               const SizedBox(height: 64),
-              
-            
               SizedBox(
                 width: double.infinity,
                 height: 56,
                 child: ElevatedButton.icon(
                   onPressed: () {
-                
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
                         content: Text('Course enrollment feature coming soon!'),
@@ -116,16 +99,12 @@ class HomeScreen extends StatelessWidget {
                   ),
                 ),
               ),
-              
               const SizedBox(height: 16),
-              
-         
               SizedBox(
                 width: double.infinity,
                 height: 56,
                 child: OutlinedButton.icon(
                   onPressed: () {
-             
                     showDialog(
                       context: context,
                       builder: (BuildContext context) {

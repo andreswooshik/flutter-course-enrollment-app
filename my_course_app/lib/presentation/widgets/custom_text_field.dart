@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../../core/constants/app_colors.dart';
 import '../../core/constants/app_dimensions.dart';
-
-
 class CustomTextField extends StatelessWidget {
   final TextEditingController controller;
   final FocusNode? focusNode;
@@ -16,7 +14,6 @@ class CustomTextField extends StatelessWidget {
   final String? Function(String?)? validator;
   final void Function(String)? onFieldSubmitted;
   final Widget? suffixIcon;
-
   const CustomTextField({
     Key? key,
     required this.controller,
@@ -31,7 +28,6 @@ class CustomTextField extends StatelessWidget {
     this.onFieldSubmitted,
     this.suffixIcon,
   }) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     return TextFormField(

@@ -1,24 +1,20 @@
-﻿import 'package:flutter/foundation.dart';
+import 'package:flutter/foundation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../domain/usecases/login_usecase.dart';
 import '../providers/login_providers.dart';
-
 part 'login_viewmodel.g.dart';
-
 @immutable
 class LoginState {
   final bool isLoading;
   final bool showLoginForm;
   final bool obscurePassword;
   final String? errorMessage;
-
   const LoginState({
     this.isLoading = false,
     this.showLoginForm = false,
     this.obscurePassword = true,
     this.errorMessage,
   });
-
   LoginState copyWith({
     bool? isLoading,
     bool? showLoginForm,
@@ -33,22 +29,18 @@ class LoginState {
     );
   }
 }
-
 @riverpod
 class LoginViewModel extends _$LoginViewModel {
   @override
   LoginState build() {
     return const LoginState();
   }
-
   void toggleLoginForm() {
     state = state.copyWith(showLoginForm: !state.showLoginForm);
   }
-
   void togglePasswordVisibility() {
     state = state.copyWith(obscurePassword: !state.obscurePassword);
   }
-
   Future<LoginResult> login(String accountId, String password) async {
     state = state.copyWith(isLoading: true, errorMessage: null);
     try {
@@ -61,7 +53,6 @@ class LoginViewModel extends _$LoginViewModel {
       return LoginResult.error('An error occurred during login');
     }
   }
-
   void reset() {
     state = const LoginState();
   }

@@ -1,15 +1,12 @@
 import 'package:flutter/material.dart';
 import '../../core/constants/app_colors.dart';
 import '../../core/constants/app_dimensions.dart';
-
-
 class CustomButton extends StatelessWidget {
   final String label;
   final VoidCallback? onPressed;
   final bool isPrimary;
   final IconData? icon;
   final bool isLoading;
-
   const CustomButton({
     Key? key,
     required this.label,
@@ -18,7 +15,6 @@ class CustomButton extends StatelessWidget {
     this.icon,
     this.isLoading = false,
   }) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     return Container(

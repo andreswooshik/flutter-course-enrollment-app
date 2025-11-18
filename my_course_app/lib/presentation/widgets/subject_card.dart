@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import '../../domain/models/subject.dart';
-
 class SubjectCard extends StatelessWidget {
   final Subject subject;
   final bool isEnrolled;
   final bool isEnrolling;
   final VoidCallback onEnroll;
   final int remainingUnits;
-
   const SubjectCard({
     super.key,
     required this.subject,
@@ -16,13 +14,11 @@ class SubjectCard extends StatelessWidget {
     required this.onEnroll,
     required this.remainingUnits,
   });
-
   @override
   Widget build(BuildContext context) {
     final canEnroll = !isEnrolled && 
                       !subject.isFull && 
                       remainingUnits >= subject.units;
-
     return Card(
       margin: const EdgeInsets.only(bottom: 16),
       elevation: 2,
@@ -40,11 +36,9 @@ class SubjectCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-          
                 Container(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 12,
@@ -63,15 +57,10 @@ class SubjectCard extends StatelessWidget {
                     ),
                   ),
                 ),
-                
-      
                 _buildStatusBadge(),
               ],
             ),
-            
             const SizedBox(height: 12),
-
-          
             Text(
               subject.name,
               style: const TextStyle(
@@ -80,9 +69,7 @@ class SubjectCard extends StatelessWidget {
                 height: 1.3,
               ),
             ),
-
             const SizedBox(height: 12),
-
             Wrap(
               spacing: 16,
               runSpacing: 8,
@@ -97,10 +84,7 @@ class SubjectCard extends StatelessWidget {
                 ),
               ],
             ),
-
             const SizedBox(height: 8),
-
-       
             Row(
               children: [
                 Icon(
@@ -120,10 +104,7 @@ class SubjectCard extends StatelessWidget {
                 ),
               ],
             ),
-
             const SizedBox(height: 8),
-
-       
             Row(
               children: [
                 Icon(
@@ -143,10 +124,7 @@ class SubjectCard extends StatelessWidget {
                 ),
               ],
             ),
-
             const SizedBox(height: 12),
-
-           
             if (isEnrolled)
               _buildEnrolledButton()
             else if (subject.isFull)
@@ -160,7 +138,6 @@ class SubjectCard extends StatelessWidget {
       ),
     );
   }
-
   Widget _buildStatusBadge() {
     if (isEnrolled) {
       return Container(
@@ -248,7 +225,6 @@ class SubjectCard extends StatelessWidget {
       );
     }
   }
-
   Widget _buildInfoChip({required IconData icon, required String label}) {
     return Row(
       mainAxisSize: MainAxisSize.min,
@@ -266,7 +242,6 @@ class SubjectCard extends StatelessWidget {
       ],
     );
   }
-
   Widget _buildEnrollButton() {
     return SizedBox(
       width: double.infinity,
@@ -300,7 +275,6 @@ class SubjectCard extends StatelessWidget {
       ),
     );
   }
-
   Widget _buildEnrolledButton() {
     return Container(
       width: double.infinity,
@@ -327,7 +301,6 @@ class SubjectCard extends StatelessWidget {
       ),
     );
   }
-
   Widget _buildFullButton() {
     return Container(
       width: double.infinity,
@@ -353,7 +326,6 @@ class SubjectCard extends StatelessWidget {
       ),
     );
   }
-
   Widget _buildDisabledButton() {
     return Container(
       width: double.infinity,

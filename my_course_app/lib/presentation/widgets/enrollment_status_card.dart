@@ -1,23 +1,19 @@
 import 'package:flutter/material.dart';
-
 class EnrollmentStatusCard extends StatelessWidget {
   final int totalUnits;
   final int enrolledCount;
   final int maxUnits;
-
   const EnrollmentStatusCard({
     super.key,
     required this.totalUnits,
     required this.enrolledCount,
     required this.maxUnits,
   });
-
   @override
   Widget build(BuildContext context) {
     final remainingUnits = maxUnits - totalUnits;
     final isNearLimit = totalUnits >= (maxUnits * 0.8);
     final isAtLimit = totalUnits >= maxUnits;
-
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
@@ -81,8 +77,6 @@ class EnrollmentStatusCard extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 20),
-
-          
           Row(
             children: [
               const Icon(
@@ -101,8 +95,6 @@ class EnrollmentStatusCard extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 16),
-
-          
           Row(
             children: [
               const Icon(
@@ -139,8 +131,6 @@ class EnrollmentStatusCard extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 12),
-
-          
           Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(

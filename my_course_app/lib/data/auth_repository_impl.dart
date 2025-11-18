@@ -1,29 +1,23 @@
-﻿import '../../domain/repositories/auth_repository.dart';
+import '../../domain/repositories/auth_repository.dart';
 import '../../authenticator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 class AuthRepositoryImpl implements AuthRepository {
   final Authenticator _authenticator;
   static const String _loggedInUserKey = 'logged_in_user';
-
   AuthRepositoryImpl(this._authenticator);
-
   @override
   Future<bool> authenticate(String accountId, String password) async {
     try {
       final result = await _authenticator.authenticate(accountId, password);
-      
       if (result) {
         final prefs = await SharedPreferences.getInstance();
         await prefs.setString(_loggedInUserKey, accountId);
       }
-      
       return result;
     } catch (e) {
       throw Exception('Authentication failed');
     }
   }
-
   @override
   Future<void> logout() async {
     try {
@@ -33,7 +27,6 @@ class AuthRepositoryImpl implements AuthRepository {
       throw Exception('Logout failed');
     }
   }
-
   @override
   Future<bool> isAuthenticated() async {
     try {
@@ -44,7 +37,6 @@ class AuthRepositoryImpl implements AuthRepository {
       return false;
     }
   }
-
   /// Get current logged-in user account ID
   Future<String?> getCurrentUserId() async {
     try {
