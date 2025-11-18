@@ -512,6 +512,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ),
                   keyboardType: TextInputType.number,
                   maxLength: 10,
+                  buildCounter: (context, {required currentLength, required isFocused, maxLength}) => null,
                   textInputAction: TextInputAction.next,
                   validator: _validateAccountID,
                 ),
@@ -542,8 +543,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       value: course,
                       child: Text(
                         course,
-                        style: const TextStyle(fontSize: 13),
+                        style: const TextStyle(fontSize: 12),
                         overflow: TextOverflow.ellipsis,
+                        maxLines: 1,
                       ),
                     );
                   }).toList(),

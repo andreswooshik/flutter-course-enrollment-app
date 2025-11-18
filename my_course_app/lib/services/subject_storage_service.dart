@@ -73,14 +73,19 @@ class SubjectStorageService {
       await _saveSubjects(subjects);
       return true;
     } catch (e) {
+      print('❌ Error updating subject enrollment: $e');
       return false;
     }
   }
 
   /// Save subjects to storage
   Future<void> _saveSubjects(List<Subject> subjects) async {
-    final prefs = await SharedPreferences.getInstance();
-    final subjectsJson = jsonEncode(subjects.map((s) => s.toJson()).toList());
-    await prefs.setString(_subjectsKey, subjectsJson);
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final subjectsJson = jsonEncode(subjects.map((s) => s.toJson()).toList());
+      await prefs.setString(_subjectsKey, subjectsJson);
+    } catch (e) {
+      print('❌ Error saving subjects: $e');
+    }
   }
 }

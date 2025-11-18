@@ -25,6 +25,7 @@ class EnrollmentStorageService {
           .where((e) => e.studentId == studentId && e.status != 'dropped')
           .toList();
     } catch (e) {
+      print('❌ Error getting student enrollments: $e');
       return [];
     }
   }
@@ -66,6 +67,7 @@ class EnrollmentStorageService {
 
       return true;
     } catch (e) {
+      print('❌ Error adding enrollment: $e');
       return false;
     }
   }
@@ -96,6 +98,7 @@ class EnrollmentStorageService {
 
       return true;
     } catch (e) {
+      print('❌ Error removing enrollment: $e');
       return false;
     }
   }
@@ -139,6 +142,7 @@ class EnrollmentStorageService {
 
       return true;
     } catch (e) {
+      print('❌ Error updating enrollment status: $e');
       return false;
     }
   }

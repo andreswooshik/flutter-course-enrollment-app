@@ -162,7 +162,7 @@ class EnrollmentStatusCard extends StatelessWidget {
                 Expanded(
                   child: Text(
                     isAtLimit
-                        ? 'Unit limit reached! Drop a course to add more.'
+                        ? 'Unit limit reached!'
                         : isNearLimit
                             ? 'Only $remainingUnits units remaining'
                             : '$remainingUnits units remaining',

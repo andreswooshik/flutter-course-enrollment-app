@@ -56,9 +56,9 @@ Future<int> totalEnrolledUnits(Ref ref) async {
 @riverpod
 class EnrollmentActions extends _$EnrollmentActions {
   @override
-  FutureOr<void> build() async {
-    final subjectService = ref.read(subjectStorageServiceProvider);
-    await subjectService.initializeSubjects();
+  void build() {
+    // No async initialization needed here
+    // Subjects are already initialized in main.dart
   }
 
   Future<String> enrollInSubject(String subjectId) async {
@@ -110,7 +110,8 @@ class EnrollmentActions extends _$EnrollmentActions {
 
       return AppConstants.enrollSuccess;
     } catch (e) {
-      return 'An error occurred';
+      print('❌ Enrollment error: $e');
+      return 'An error occurred: $e';
     }
   }
 
