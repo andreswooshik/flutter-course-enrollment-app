@@ -73,18 +73,6 @@ This application allows USJ-R students to:
 - Google Fonts (Poppins & Inter)
 - Loading states and error handling
 - Success/error notifications
-
-## 🎬 Demo & Presentation
-
-📺 **[Complete Demo Script](DEMO_SCRIPT.md)** - Detailed walkthrough script covering:
-- App feature demonstration (6-7 minutes)
-- Technical deep dive on data synchronization (3-4 minutes)
-- Code examples showing Riverpod state management
-- Data flow from Registration → Login → Profile
-- Enrollment synchronization across screens
-
-Perfect for presentations, code reviews, and technical demonstrations!
-
 ---
 
 ## 📸 Application Screenshots
