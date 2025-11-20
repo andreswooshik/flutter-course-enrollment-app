@@ -287,15 +287,16 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
                     prefixIcon: Icons.person_outline,
                     enabled: !loginState.isLoading,
                     inputFormatters: [
-                      FilteringTextInputFormatter.deny(RegExp(r'\s')),
+                      FilteringTextInputFormatter.digitsOnly,
+                      LengthLimitingTextInputFormatter(10),
                     ],
                     onFieldSubmitted: (_) => _passwordFocusNode.requestFocus(),
                     validator: (value) {
                       if (value == null || value.trim().isEmpty) {
                         return AppStrings.accountIdRequired;
                       }
-                      if (value.trim().length < 3) {
-                        return AppStrings.accountIdTooShort;
+                      if (value.trim().length != 10) {
+                        return 'Account ID must be exactly 10 digits';
                       }
                       return null;
                     },

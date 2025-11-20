@@ -31,7 +31,7 @@ class EnrollmentActions extends _$EnrollmentActions {
   
   Future<String> enrollInSubject(String subjectId) async {
     // ... enrollment logic
-    ref.invalidate(studentEnrollmentsProvider); // ❌ CAUSED DISPOSAL ERROR
+    ref.invalidate(studentEnrollmentsProvider); //  CAUSED DISPOSAL ERROR
     return AppConstants.enrollSuccess;
   }
 }

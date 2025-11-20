@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import '../../authenticator.dart';
 import '../../services/user_storage_service.dart';
 import '../../core/constants/app_colors.dart';
@@ -433,6 +434,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     fillColor: AppColors.white,
                   ),
                   keyboardType: TextInputType.emailAddress,
+                  textCapitalization: TextCapitalization.none,
+                  autocorrect: false,
                   textInputAction: TextInputAction.next,
                   validator: _validateEmail,
                 ),
@@ -459,6 +462,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     fillColor: AppColors.white,
                   ),
                   keyboardType: TextInputType.number,
+                  inputFormatters: [
+                    FilteringTextInputFormatter.digitsOnly,
+                    LengthLimitingTextInputFormatter(10),
+                  ],
                   maxLength: 10,
                   buildCounter: (context, {required currentLength, required isFocused, maxLength}) => null,
                   textInputAction: TextInputAction.next,
@@ -490,7 +497,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       value: course,
                       child: Text(
                         course,
-                        style: const TextStyle(fontSize: 11),
+                        style: const TextStyle(fontSize: 8),
                         overflow: TextOverflow.ellipsis,
                         maxLines: 1,
                       ),
