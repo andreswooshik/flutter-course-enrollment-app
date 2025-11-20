@@ -184,10 +184,6 @@ flutter test --coverage
 - [ ] Payment integration
 - [ ] Mobile app optimization
 
-## 👥 Contributors
-
-- **Development Team** - Initial work and bug fixes
-- **USJ-R** - Requirements and design guidelines
 
 ## 📄 License
 
@@ -200,8 +196,3 @@ For issues or questions:
 2. Review error messages carefully
 3. Ensure all dependencies are installed
 4. Verify `.g.dart` files are generated
-
----
-
-**Last Updated:** November 19, 2025
-**Status:** ✅ Production Ready
