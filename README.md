@@ -89,125 +89,46 @@ Perfect for presentations, code reviews, and technical demonstrations!
 
 ## 📸 Application Screenshots
 
-### 1. Welcome Screen
-<img src="docs/screenshots/01_welcome_screen.png" width="300" alt="Welcome Screen">
+<div align="center">
 
-The landing page featuring:
-- USJ-R official logo and branding
-- App title: "USJ-R Course Enrollment App"
-- University motto: *Caritas et Scientia*
-- **Login** button (Deep Green #1B5E20)
-- **Register** button (Gold #FFD700)
+### Authentication & Onboarding
+<p>
+  <img src="docs/screenshots/01_welcome_screen.png" width="250" alt="Welcome Screen">
+  <img src="docs/screenshots/02_registration_screen.png" width="250" alt="Registration Screen">
+  <img src="docs/screenshots/03_login_screen.png" width="250" alt="Login Screen">
+</p>
 
-### 2. Student Registration
-<img src="docs/screenshots/02_registration_screen.png" width="300" alt="Registration Screen">
+### Dashboard & Course Management
+<p>
+  <img src="docs/screenshots/04_dashboard.png" width="250" alt="Dashboard">
+  <img src="docs/screenshots/08_my_courses.png" width="250" alt="My Courses">
+  <img src="docs/screenshots/09_profile_screen.png" width="250" alt="Profile">
+</p>
 
-Comprehensive registration form with:
-- **Personal Information**: First Name, Last Name
-- **Email Address**: USJ-R email validation (@usjr.edu.ph)
-- **Account ID**: 10-digit student ID validation
-- **Course Dropdown**: BSIT, BSCS, BSIS, ACT programs
-- **Year Level Dropdown**: Year 1-4 selection
-- **Password Fields**: With strength indicator and visibility toggle
-- **Terms of Service**: Checkbox acceptance required
+### Browse Subjects (All Tabs)
+<p>
+  <img src="docs/screenshots/05_browse_subjects_1st_year.png" width="250" alt="1st Year Subjects">
+  <img src="docs/screenshots/06_browse_subjects_major.png" width="250" alt="Major Subjects">
+  <img src="docs/screenshots/07_browse_subjects_minor.png" width="250" alt="Minor Subjects">
+</p>
 
-### 3. Login Screen
-<img src="docs/screenshots/03_login_screen.png" width="300" alt="Login Screen">
-
-Clean login interface with:
-- "Welcome Back!" greeting
-- Account ID input field
-- Password field with visibility toggle
-- Login button
-- "Don't have an account? Register" link
-
-### 4. Course Enrollment Dashboard
-<img src="docs/screenshots/04_enrollment_home.png" width="300" alt="Enrollment Dashboard">
-
-Main dashboard displaying:
-- **Enrollment Status Card** (Orange gradient)
-  - Active status badge
-  - Courses enrolled count (3 Courses)
-  - Unit tracking (9/24 units)
-  - Remaining units indicator (15 units remaining)
-- **Academic Information Section**
-  - View Grades option
-  - Enrollment Schedule access
-- **Navigation Buttons**
-  - My Courses (view enrolled subjects)
-  - Browse Courses (explore available subjects)
-- Login success notification
-
-### 5. Browse Subjects - 1st Year Tab
-<img src="docs/screenshots/05_browse_subjects_1st_year.png" width="300" alt="Browse Subjects - 1st Year">
-
-Subject browsing with category tabs:
-- **Tabs**: 1st Year, Major, Minor
-- **Subject Cards** showing:
-  - Course code and enrollment status badge
-  - Subject title
-  - Units, slots available, schedule, instructor
-  - Enrollment status (Already Enrolled / Subject Full)
-
-**Example Subjects:**
-- PROG-1: Programming 1 (Enrolled)
-- WEBDEV: Web Development (Full)
-- COMPMATH: Computing Math Prep (Enrolled)
-
-### 6. Browse Subjects - Major Tab
-<img src="docs/screenshots/06_browse_subjects_major.png" width="300" alt="Browse Subjects - Major">
-
-Major subjects display with same card layout showing course availability and enrollment status.
-
-### 7. Browse Subjects - Minor Tab
-<img src="docs/screenshots/07_browse_subjects_minor.png" width="300" alt="Browse Subjects - Minor">
-
-Minor subjects including:
-- **GE-MMW**: Mathematics in the Modern World (Enrolled)
-- **REED**: Readings in Philippine History (Available - Enroll button)
-- **EP 1**: English Proficiency Level 1 (Available - Enroll button)
-
-Each card shows:
-- 3 Units
-- Available slots (e.g., 38/50, 22/30)
-- Schedule (MWF, TTH)
-- Instructor name
-- Enroll button for available subjects
-
-### 8. My Courses
-<img src="docs/screenshots/08_my_courses.png" width="300" alt="My Courses">
-
-Enrolled subjects overview:
-- Header: "3 Courses" and "9/24 Units"
-- List of enrolled subjects with full details
-- Blue info box: "To drop this course, please contact the admin"
-- Shows all enrolled subjects with their:
-  - Course code and status
-  - Units and slots
-  - Schedule and instructor
-
-**Enrolled Courses:**
-1. PROG-1: Programming 1
-2. GE-MMW: Mathematics in the Modern World
-3. COMPMATH: Computing Math Prep
-
-### 9. User Profile
-<img src="docs/screenshots/09_profile_screen.png" width="300" alt="User Profile">
-
-Student profile information:
-- **Profile Header** (Deep Green background)
-  - User initials avatar (RE)
-  - Full name: Ralf Andre Ebuna
-  - Student ID: 2023031886
-- **Personal Information Section**
-  - Email: ralfandre.ebuna.23@usjr.edu.ph
-  - Degree Program: BSIT - Bachelor of Science in Information Technology
-  - Year Level: Year 1
-- Blue info box: "To update your profile information, please contact the admin"
+</div>
 
 ---
 
-### UI Design Highlights
+### 📱 Screen Details
+
+| Screen | Description | Key Features |
+|--------|-------------|--------------|
+| **Welcome** | Landing page with USJ-R branding | Logo, motto (*Caritas et Scientia*), Login/Register buttons |
+| **Registration** | Student account creation | Email validation (@usjr.edu.ph), 10-digit ID, password strength indicator |
+| **Login** | Secure authentication | Account ID input, password toggle, session management |
+| **Dashboard** | Enrollment overview | Active status, 3 courses enrolled, 9/24 units tracking, navigation |
+| **Browse Subjects** | Course catalog with tabs | 1st Year/Major/Minor tabs, enrollment status badges, slot availability |
+| **My Courses** | Enrolled subjects list | 3 courses, 9/24 units, drop course info, detailed subject cards |
+| **Profile** | Student information | Name, ID, email, degree program, year level |
+
+### 🎨 UI Design Highlights
 - **Color Scheme**: USJ-R official colors (Deep Green #1B5E20 and Gold #FFD700)
 - **Typography**: Clean, modern fonts with proper hierarchy
 - **Status Indicators**: Color-coded badges (Green for enrolled, Red for full, Blue for available)
